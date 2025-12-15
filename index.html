@@ -1,23 +1,24 @@
 <!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>BOOST | Architects of Strength</title>
     <meta name="description" content="Boost Gym - The architecture of human performance.">
-    
-    <!-- Google Fonts -->
+    <!-- Added theme color for mobile browsers -->
+    <meta name="theme-color" content="#030303">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&family=Syncopate:wght@400;700&display=swap" rel="stylesheet">
-    
-    <!-- Tailwind CSS -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&family=Syncopate:wght@400;700&display=swap"
+        rel="stylesheet">
+
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- FontAwesome -->
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <!-- Tailwind Config -->
     <script>
         tailwind.config = {
             theme: {
@@ -54,6 +55,11 @@
             color: #EDEDED;
             overflow-x: hidden;
             cursor: default;
+            /* Prevent text selection for app-like feel */
+            -webkit-user-select: none;
+            user-select: none;
+            /* Handle safe areas for iPhone X+ */
+            padding-bottom: env(safe-area-inset-bottom);
         }
 
         /* Film Grain Overlay */
@@ -73,13 +79,16 @@
         ::-webkit-scrollbar {
             width: 4px;
         }
+
         ::-webkit-scrollbar-track {
             background: #030303;
         }
+
         ::-webkit-scrollbar-thumb {
             background: #333;
             border-radius: 2px;
         }
+
         ::-webkit-scrollbar-thumb:hover {
             background: #4F46E5;
         }
@@ -97,7 +106,7 @@
             justify-content: center;
             align-items: center;
         }
-        
+
         .loader-bar {
             width: 2px;
             height: 0;
@@ -112,37 +121,61 @@
             border: 1px solid rgba(255, 255, 255, 0.05);
             overflow: hidden;
         }
-        
-        .spotlight-card::before {
-            content: '';
-            position: absolute;
-            top: var(--y, -50%);
-            left: var(--x, -50%);
-            width: 400px;
-            height: 400px;
-            background: radial-gradient(circle, rgba(79, 70, 229, 0.15), transparent 60%);
-            transform: translate(-50%, -50%);
-            opacity: 0;
-            transition: opacity 0.3s;
-            pointer-events: none;
-            z-index: 1;
-        }
-        
-        .spotlight-card:hover::before {
-            opacity: 1;
+
+        /* Only enable mouse spotlight on desktop */
+        @media (min-width: 768px) {
+            .spotlight-card::before {
+                content: '';
+                position: absolute;
+                top: var(--y, -50%);
+                left: var(--x, -50%);
+                width: 400px;
+                height: 400px;
+                background: radial-gradient(circle, rgba(79, 70, 229, 0.15), transparent 60%);
+                transform: translate(-50%, -50%);
+                opacity: 0;
+                transition: opacity 0.3s;
+                pointer-events: none;
+                z-index: 1;
+            }
+
+            .spotlight-card:hover::before {
+                opacity: 1;
+            }
         }
 
         /* Navbar Blur */
         .glass-nav {
-            background: rgba(3, 3, 3, 0.7);
+            background: rgba(3, 3, 3, 0.85);
             backdrop-filter: blur(20px);
             border-bottom: 1px solid rgba(255, 255, 255, 0.03);
         }
+
+        /* Mobile Bottom Nav Styles */
+        .bottom-nav-item {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: #666;
+            transition: all 0.3s ease;
+        }
+
+        .bottom-nav-item.active,
+        .bottom-nav-item:hover {
+            color: #4F46E5;
+        }
+
+        .bottom-nav-item:active {
+            transform: scale(0.9);
+        }
     </style>
 </head>
-<body class="font-body antialiased selection:bg-boost-accent selection:text-white">
 
-    <!-- Preloader -->
+<body class="font-body antialiased selection:bg-boost-accent selection:text-white pb-24 md:pb-0">
+
     <div id="preloader">
         <div class="text-center">
             <div class="flex justify-center gap-2 mb-4 h-12 items-end">
@@ -154,36 +187,38 @@
         </div>
     </div>
 
-    <!-- Grain Overlay -->
     <div class="grain-overlay"></div>
 
-    <!-- Navigation -->
     <nav class="fixed top-0 w-full z-50 transition-all duration-500 glass-nav" id="navbar">
-        <div class="max-w-screen-2xl mx-auto px-8 h-24 flex justify-between items-center">
-            <!-- Logo -->
+        <div class="max-w-screen-2xl mx-auto px-6 md:px-8 h-16 md:h-24 flex justify-between items-center">
             <a href="#" class="flex items-center gap-3 group relative z-50">
-                <div class="w-10 h-10 bg-white text-black flex items-center justify-center font-bold text-xl group-hover:bg-boost-accent group-hover:text-white transition-colors duration-500 clip-slant" style="clip-path: polygon(15% 0, 100% 0, 85% 100%, 0% 100%);">
+                <div class="w-8 h-8 md:w-10 md:h-10 bg-white text-black flex items-center justify-center font-bold text-lg md:text-xl group-hover:bg-boost-accent group-hover:text-white transition-colors duration-500 clip-slant"
+                    style="clip-path: polygon(15% 0, 100% 0, 85% 100%, 0% 100%);">
                     <i class="fa-solid fa-bolt"></i>
                 </div>
                 <div class="flex flex-col">
-                    <span class="font-display font-bold text-2xl tracking-widest text-white leading-none">BOOST</span>
-                    <span class="text-[10px] text-gray-500 uppercase tracking-[0.3em] group-hover:text-boost-accent transition-colors">Performance</span>
+                    <span
+                        class="font-display font-bold text-xl md:text-2xl tracking-widest text-white leading-none">BOOST</span>
+                    <span
+                        class="text-[9px] md:text-[10px] text-gray-500 uppercase tracking-[0.3em] group-hover:text-boost-accent transition-colors">Performance</span>
                 </div>
             </a>
 
-            <!-- Desktop Links -->
             <div class="hidden lg:flex items-center gap-16 font-medium text-xs tracking-[0.15em] text-gray-400">
                 <a href="#vision" class="hover:text-white transition-colors relative group">
                     <span class="relative z-10">VISION</span>
-                    <span class="absolute -bottom-2 left-0 w-0 h-[1px] bg-boost-accent group-hover:w-full transition-all duration-300"></span>
+                    <span
+                        class="absolute -bottom-2 left-0 w-0 h-[1px] bg-boost-accent group-hover:w-full transition-all duration-300"></span>
                 </a>
                 <a href="#programs" class="hover:text-white transition-colors relative group">
                     <span class="relative z-10">PROGRAMS</span>
-                    <span class="absolute -bottom-2 left-0 w-0 h-[1px] bg-boost-accent group-hover:w-full transition-all duration-300"></span>
+                    <span
+                        class="absolute -bottom-2 left-0 w-0 h-[1px] bg-boost-accent group-hover:w-full transition-all duration-300"></span>
                 </a>
                 <a href="#coaches" class="hover:text-white transition-colors relative group">
                     <span class="relative z-10">COACHES</span>
-                    <span class="absolute -bottom-2 left-0 w-0 h-[1px] bg-boost-accent group-hover:w-full transition-all duration-300"></span>
+                    <span
+                        class="absolute -bottom-2 left-0 w-0 h-[1px] bg-boost-accent group-hover:w-full transition-all duration-300"></span>
                 </a>
                 <a href="#locations" class="hover:text-white transition-colors relative group text-white">
                     <span class="relative z-10">LOCATIONS</span>
@@ -191,66 +226,135 @@
                 </a>
             </div>
 
-            <!-- CTA -->
-            <div class="flex items-center gap-8">
-                <a href="#membership" class="magnetic-btn relative px-8 py-3 overflow-hidden border border-white/10 group">
-                    <div class="absolute inset-0 bg-white transform -translate-x-full group-hover:translate-x-0 transition-transform duration-300 ease-out mix-blend-difference"></div>
-                    <span class="relative z-10 text-xs font-bold uppercase tracking-[0.2em] text-white group-hover:text-black transition-colors duration-300">Join Now</span>
+            <div class="flex items-center gap-6">
+                <a href="#membership"
+                    class="hidden md:flex magnetic-btn relative px-8 py-3 overflow-hidden border border-white/10 group">
+                    <div
+                        class="absolute inset-0 bg-white transform -translate-x-full group-hover:translate-x-0 transition-transform duration-300 ease-out mix-blend-difference">
+                    </div>
+                    <span
+                        class="relative z-10 text-xs font-bold uppercase tracking-[0.2em] text-white group-hover:text-black transition-colors duration-300">Join
+                        Now</span>
                 </a>
-                <button class="lg:hidden text-white text-2xl">
+
+                <!-- 
+                    Updated: Hidden on mobile ('hidden'), visible on tablet ('md:block'), hidden on desktop ('lg:hidden') 
+                    Because on mobile we use the Bottom Bar Menu button instead.
+                -->
+                <button id="mobile-menu-btn" class="hidden md:block lg:hidden text-white text-2xl p-2 z-50">
                     <i class="fa-solid fa-bars-staggered"></i>
                 </button>
             </div>
         </div>
     </nav>
 
-    <!-- Social Sidebar -->
-    <div class="fixed right-10 top-1/2 transform -translate-y-1/2 z-40 hidden lg:flex flex-col gap-6 items-center mix-blend-screen">
+    <!-- NEW: Mobile Bottom App Navigation -->
+    <div
+        class="fixed bottom-0 left-0 w-full h-20 bg-[#030303]/95 backdrop-blur-xl border-t border-white/10 z-50 flex justify-around items-center md:hidden px-2 pb-2">
+        <a href="#" class="bottom-nav-item w-1/5 group">
+            <i class="fa-solid fa-house text-xl mb-1 group-hover:-translate-y-1 transition-transform"></i>
+            <span class="text-[8px] font-bold uppercase tracking-widest">Home</span>
+        </a>
+        <a href="#vision" class="bottom-nav-item w-1/5 group">
+            <i class="fa-solid fa-eye text-xl mb-1 group-hover:-translate-y-1 transition-transform"></i>
+            <span class="text-[8px] font-bold uppercase tracking-widest">Vision</span>
+        </a>
+
+        <!-- Center Floating Action Button -->
+        <a href="#membership" class="relative -top-6">
+            <div
+                class="w-14 h-14 bg-boost-accent rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(79,70,229,0.5)] border border-white/20 transform active:scale-95 transition-all">
+                <i class="fa-solid fa-bolt text-xl text-white"></i>
+            </div>
+        </a>
+
+        <a href="#programs" class="bottom-nav-item w-1/5 group">
+            <i class="fa-solid fa-dumbbell text-xl mb-1 group-hover:-translate-y-1 transition-transform"></i>
+            <span class="text-[8px] font-bold uppercase tracking-widest">Train</span>
+        </a>
+        <button id="bottom-menu-btn" class="bottom-nav-item w-1/5 group">
+            <i class="fa-solid fa-bars-staggered text-xl mb-1 group-hover:-translate-y-1 transition-transform"></i>
+            <span class="text-[8px] font-bold uppercase tracking-widest">Menu</span>
+        </button>
+    </div>
+
+    <div id="mobile-menu"
+        class="fixed inset-0 z-[60] bg-boost-black transform translate-x-full transition-transform duration-500 flex flex-col justify-center items-center">
+        <button id="close-menu-btn"
+            class="absolute top-6 right-6 text-white text-3xl p-4 hover:text-boost-accent transition-colors">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+        <div class="flex flex-col gap-10 text-center font-display text-2xl font-bold uppercase tracking-widest">
+            <a href="#vision" class="mobile-link hover:text-boost-accent transition-colors">Vision</a>
+            <a href="#programs" class="mobile-link hover:text-boost-accent transition-colors">Programs</a>
+            <a href="#coaches" class="mobile-link hover:text-boost-accent transition-colors">Coaches</a>
+            <a href="#locations" class="mobile-link hover:text-boost-accent transition-colors">Locations</a>
+            <a href="#membership" class="mobile-link text-boost-accent mt-4">Join Now</a>
+        </div>
+    </div>
+
+    <div
+        class="fixed right-10 top-1/2 transform -translate-y-1/2 z-40 hidden lg:flex flex-col gap-6 items-center mix-blend-screen">
         <div class="w-[1px] h-32 bg-gradient-to-b from-transparent to-white/30"></div>
-        <a href="#" class="text-gray-500 hover:text-boost-accent hover:scale-110 transition-all duration-300 text-sm"><i class="fa-brands fa-instagram"></i></a>
-        <a href="#" class="text-gray-500 hover:text-boost-accent hover:scale-110 transition-all duration-300 text-sm"><i class="fa-brands fa-twitter"></i></a>
+        <a href="#" class="text-gray-500 hover:text-boost-accent hover:scale-110 transition-all duration-300 text-sm"><i
+                class="fa-brands fa-instagram"></i></a>
+        <a href="#" class="text-gray-500 hover:text-boost-accent hover:scale-110 transition-all duration-300 text-sm"><i
+                class="fa-brands fa-twitter"></i></a>
         <div class="w-[1px] h-32 bg-gradient-to-b from-white/30 to-transparent"></div>
     </div>
 
-    <!-- Hero Section -->
-    <header class="relative min-h-screen w-full flex items-center justify-center overflow-hidden pt-20">
-        <!-- Dynamic Background -->
+    <header class="relative min-h-[100dvh] w-full flex items-center justify-center overflow-hidden pt-20">
         <div class="absolute inset-0 z-0 select-none">
             <div class="absolute inset-0 bg-boost-black/40 z-10"></div>
-            <!-- Radial Gradient Spotlight -->
-            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-boost-accent/10 rounded-full blur-[150px] animate-pulse"></div>
-            <img src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=2574&auto=format&fit=crop" class="w-full h-full object-cover grayscale opacity-40 scale-105" id="hero-bg" alt="Gym Background">
+            <div
+                class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] md:w-[800px] md:h-[800px] bg-boost-accent/10 rounded-full blur-[100px] md:blur-[150px] animate-pulse">
+            </div>
+            <img src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=2574&auto=format&fit=crop"
+                class="w-full h-full object-cover grayscale opacity-40 scale-105" id="hero-bg" alt="Gym Background">
         </div>
 
-        <div class="relative z-20 text-center px-4 max-w-6xl flex flex-col items-center">
-            
-            <div class="mb-10 opacity-0 animate-fade-in flex items-center gap-4">
-                <span class="w-16 h-[1px] bg-gradient-to-r from-transparent to-gray-500"></span>
-                <p class="text-gray-400 font-bold tracking-[0.4em] text-[10px] uppercase">
+        <div class="relative z-20 text-center px-4 max-w-6xl flex flex-col items-center w-full">
+
+            <div class="mb-6 md:mb-10 opacity-0 animate-fade-in flex items-center gap-4">
+                <span class="w-8 md:w-16 h-[1px] bg-gradient-to-r from-transparent to-gray-500"></span>
+                <p
+                    class="text-gray-400 font-bold tracking-[0.2em] md:tracking-[0.4em] text-[9px] md:text-[10px] uppercase">
                     The Science of Strength
                 </p>
-                <span class="w-16 h-[1px] bg-gradient-to-l from-transparent to-gray-500"></span>
+                <span class="w-8 md:w-16 h-[1px] bg-gradient-to-l from-transparent to-gray-500"></span>
             </div>
-            
-            <h1 class="font-display font-bold text-6xl md:text-8xl lg:text-[10rem] uppercase leading-[0.85] mb-12 text-white mix-blend-overlay">
-                <span class="block overflow-hidden"><span class="block reveal-text">Form</span></span>
-                <span class="block overflow-hidden"><span class="block reveal-text text-transparent bg-clip-text bg-gradient-to-b from-white to-gray-600">Follows</span></span>
-                <span class="block overflow-hidden"><span class="block reveal-text text-boost-accent">Power</span></span>
+
+            <h1
+                class="font-display font-bold text-5xl md:text-8xl lg:text-[10rem] uppercase leading-[0.9] md:leading-[0.85] mb-8 md:mb-12 text-white mix-blend-overlay w-full">
+                <span class="block overflow-hidden"><span class="block reveal-text">Strong</span></span>
+                <span class="block overflow-hidden"><span
+                        class="block reveal-text text-transparent bg-clip-text bg-gradient-to-b from-white to-gray-600">Discipline</span></span>
+                <span class="block overflow-hidden"><span
+                        class="block reveal-text text-boost-accent">Strength</span></span>
             </h1>
 
-            <p class="text-gray-400 text-lg md:text-xl max-w-xl mx-auto mb-16 leading-relaxed font-light opacity-0 animate-fade-in delay-200 tracking-wide">
+            <p
+                class="text-gray-400 text-sm md:text-xl max-w-xs md:max-w-xl mx-auto mb-10 md:mb-16 leading-relaxed font-light opacity-0 animate-fade-in delay-200 tracking-wide">
                 We don't just build bodies. We engineer machines. Experience the pinnacle of athletic architecture.
             </p>
 
-            <div class="flex flex-col md:flex-row gap-8 justify-center items-center opacity-0 animate-fade-in delay-300 w-full">
-                <a href="#membership" class="group relative px-10 py-5 bg-white text-black font-display font-bold text-sm uppercase tracking-widest overflow-hidden min-w-[200px]">
-                    <span class="relative z-10 group-hover:text-white transition-colors duration-300">Start Free Trial</span>
-                    <div class="absolute inset-0 bg-boost-accent transform translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-in-out"></div>
+            <div
+                class="flex flex-col md:flex-row gap-6 md:gap-8 justify-center items-center opacity-0 animate-fade-in delay-300 w-full">
+                <a href="#membership"
+                    class="group relative px-8 py-4 md:px-10 md:py-5 bg-white text-black font-display font-bold text-xs md:text-sm uppercase tracking-widest overflow-hidden min-w-[180px] md:min-w-[200px]">
+                    <span class="relative z-10 group-hover:text-white transition-colors duration-300">Start Free
+                        Trial</span>
+                    <div
+                        class="absolute inset-0 bg-boost-accent transform translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-in-out">
+                    </div>
                 </a>
-                
-                <a href="#vision" class="flex items-center gap-4 text-white hover:text-boost-accent transition-colors group text-sm uppercase tracking-widest">
-                    <div class="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center group-hover:border-boost-accent transition-colors">
-                        <i class="fa-solid fa-play text-xs group-hover:scale-125 transition-transform"></i>
+
+                <a href="#vision"
+                    class="flex items-center gap-4 text-white hover:text-boost-accent transition-colors group text-xs md:text-sm uppercase tracking-widest">
+                    <div
+                        class="w-10 h-10 md:w-12 md:h-12 rounded-full border border-white/20 flex items-center justify-center group-hover:border-boost-accent transition-colors">
+                        <i
+                            class="fa-solid fa-play text-[10px] md:text-xs group-hover:scale-125 transition-transform"></i>
                     </div>
                     <span>Manifesto</span>
                 </a>
@@ -258,81 +362,105 @@
         </div>
     </header>
 
-    <!-- Marquee -->
-    <div class="bg-boost-black border-y border-white/5 py-6 overflow-hidden relative z-20">
-        <div class="marquee-wrapper flex gap-16 whitespace-nowrap opacity-60 hover:opacity-100 transition-opacity duration-500">
-            <div class="marquee-content flex gap-16 items-center text-4xl font-display font-bold text-transparent stroke-text uppercase tracking-widest" style="-webkit-text-stroke: 1px rgba(255,255,255,0.15);">
-                <span>Hypertrophy</span> <i class="fa-solid fa-bolt text-boost-accent text-sm"></i>
-                <span>Calisthenics</span> <i class="fa-solid fa-bolt text-boost-accent text-sm"></i>
-                <span>Powerlifting</span> <i class="fa-solid fa-bolt text-boost-accent text-sm"></i>
-                <span>Recovery</span> <i class="fa-solid fa-bolt text-boost-accent text-sm"></i>
-                <span>Bio-Hacking</span> <i class="fa-solid fa-bolt text-boost-accent text-sm"></i>
+    <div class="bg-boost-black border-y border-white/5 py-4 md:py-6 overflow-hidden relative z-20">
+        <div
+            class="marquee-wrapper flex gap-10 md:gap-16 whitespace-nowrap opacity-60 hover:opacity-100 transition-opacity duration-500">
+            <div class="marquee-content flex gap-10 md:gap-16 items-center text-2xl md:text-4xl font-display font-bold text-transparent stroke-text uppercase tracking-widest"
+                style="-webkit-text-stroke: 1px rgba(255,255,255,0.15);">
+                <span>Hypertrophy</span> <i class="fa-solid fa-bolt text-boost-accent text-xs md:text-sm"></i>
+                <span>Calisthenics</span> <i class="fa-solid fa-bolt text-boost-accent text-xs md:text-sm"></i>
+                <span>Powerlifting</span> <i class="fa-solid fa-bolt text-boost-accent text-xs md:text-sm"></i>
+                <span>Recovery</span> <i class="fa-solid fa-bolt text-boost-accent text-xs md:text-sm"></i>
+                <span>Bio-Hacking</span> <i class="fa-solid fa-bolt text-boost-accent text-xs md:text-sm"></i>
             </div>
         </div>
     </div>
 
-    <!-- Vision Section -->
-    <section class="py-40 bg-boost-charcoal relative" id="vision">
-        <div class="max-w-screen-xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
+    <section class="py-20 md:py-40 bg-boost-charcoal relative" id="vision">
+        <div class="max-w-screen-xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-12 gap-12 md:gap-16 items-center">
             <div class="lg:col-span-5 relative z-10">
-                <span class="text-boost-accent font-bold tracking-widest text-xs uppercase mb-6 block">Our Philosophy</span>
-                <h2 class="text-5xl md:text-7xl font-display font-bold text-white uppercase leading-none mb-10">
+                <span class="text-boost-accent font-bold tracking-widest text-xs uppercase mb-4 md:mb-6 block">Our
+                    Philosophy</span>
+                <h2
+                    class="text-4xl md:text-5xl lg:text-7xl font-display font-bold text-white uppercase leading-none mb-8 md:mb-10">
                     Precision <br> Meets <span class="text-gray-700">Pain.</span>
                 </h2>
-                <div class="w-20 h-1 bg-boost-accent mb-10"></div>
-                <p class="text-gray-400 text-lg mb-10 leading-relaxed font-light">
-                    Average is a disease. We are the cure. At Boost, we don't believe in "workouts". We believe in training protocols derived from elite athletic standards.
+                <div class="w-16 md:w-20 h-1 bg-boost-accent mb-8 md:mb-10"></div>
+                <p class="text-gray-400 text-base md:text-lg mb-8 md:mb-10 leading-relaxed font-light">
+                    Average is a disease. We are the cure. At Boost, we don't believe in "workouts". We believe in
+                    training protocols derived from elite athletic standards.
                 </p>
-                
-                <div class="flex gap-12 border-t border-white/5 pt-10">
+
+                <div class="flex gap-8 md:gap-12 border-t border-white/5 pt-8 md:pt-10">
                     <div>
-                        <h4 class="text-5xl font-display font-bold text-white mb-2">24<span class="text-boost-accent text-2xl">/7</span></h4>
+                        <h4 class="text-4xl md:text-5xl font-display font-bold text-white mb-2">24<span
+                                class="text-boost-accent text-2xl">/7</span></h4>
                         <p class="text-[10px] text-gray-500 uppercase tracking-widest">Access</p>
                     </div>
                     <div>
-                        <h4 class="text-5xl font-display font-bold text-white mb-2">0<span class="text-boost-accent text-2xl">%</span></h4>
+                        <h4 class="text-4xl md:text-5xl font-display font-bold text-white mb-2">0<span
+                                class="text-boost-accent text-2xl">%</span></h4>
                         <p class="text-[10px] text-gray-500 uppercase tracking-widest">Excuses</p>
                     </div>
                 </div>
             </div>
 
-            <div class="lg:col-span-7 relative group perspective-1000">
-                <div class="absolute -inset-4 border border-white/10 z-0"></div>
-                <div class="absolute -inset-4 border border-boost-accent/30 z-0 translate-x-4 translate-y-4"></div>
-                
-                <div class="relative overflow-hidden z-10 h-[700px]">
-                     <div class="absolute inset-0 bg-boost-accent/20 z-20 mix-blend-overlay"></div>
-                    <img src="https://images.unsplash.com/photo-1599058945522-28d584b6f0ff?q=80&w=2669&auto=format&fit=crop" class="w-full h-full object-cover grayscale transition-all duration-1000 hover:scale-110" alt="Interior">
+            <div class="lg:col-span-7 relative group perspective-1000 mt-10 lg:mt-0">
+                <div class="absolute -inset-2 md:-inset-4 border border-white/10 z-0"></div>
+                <div
+                    class="absolute -inset-2 md:-inset-4 border border-boost-accent/30 z-0 translate-x-2 md:translate-x-4 translate-y-2 md:translate-y-4">
+                </div>
+
+                <div class="relative overflow-hidden z-10 h-[400px] md:h-[700px]">
+                    <div class="absolute inset-0 bg-boost-accent/20 z-20 mix-blend-overlay"></div>
+                    <img src="https://images.unsplash.com/photo-1599058945522-28d584b6f0ff?q=80&w=2669&auto=format&fit=crop"
+                        class="w-full h-full object-cover grayscale transition-all duration-1000 hover:scale-110"
+                        alt="Interior">
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Nutrition (Product Showcase) -->
-    <section class="py-40 bg-boost-black relative overflow-hidden" id="nutrition">
-        <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-gray-900 via-boost-black to-boost-black opacity-40"></div>
+    <section class="py-20 md:py-40 bg-boost-black relative overflow-hidden" id="nutrition">
+        <div
+            class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-gray-900 via-boost-black to-boost-black opacity-40">
+        </div>
         <div class="max-w-screen-xl mx-auto px-6 relative z-10">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 md:gap-20 items-center">
                 <div class="order-2 lg:order-1 relative flex justify-center perspective-1000 group">
-                    <div class="w-[400px] h-[400px] bg-boost-accent/5 rounded-full blur-3xl absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"></div>
-                    <div class="relative z-10 transform transition-transform duration-700 ease-out group-hover:scale-105 group-hover:-rotate-6 cursor-pointer">
-                        <img src="https://images.unsplash.com/photo-1593095948071-474c5cc2989d?q=80&w=2670&auto=format&fit=crop" class="w-[400px] object-contain drop-shadow-[0_20px_50px_rgba(79,70,229,0.3)]" alt="Protein">
-                        <div class="absolute top-0 right-10 bg-white/10 backdrop-blur-md border border-white/20 px-6 py-3 rounded-sm shadow-xl animate-bounce duration-[4000ms]">
-                            <span class="block text-xs text-gray-300 uppercase tracking-widest">Purity</span>
-                            <span class="block text-xl font-bold text-white">100% Isolate</span>
+                    <div
+                        class="w-[250px] md:w-[400px] h-[250px] md:h-[400px] bg-boost-accent/5 rounded-full blur-3xl absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                    </div>
+                    <div
+                        class="relative z-10 transform transition-transform duration-700 ease-out group-hover:scale-105 group-hover:-rotate-6 cursor-pointer">
+                        <img src="https://images.unsplash.com/photo-1593095948071-474c5cc2989d?q=80&w=2670&auto=format&fit=crop"
+                            class="w-[280px] md:w-[400px] object-contain drop-shadow-[0_20px_50px_rgba(79,70,229,0.3)]"
+                            alt="Protein">
+                        <div
+                            class="absolute top-0 right-0 md:right-10 bg-white/10 backdrop-blur-md border border-white/20 px-4 py-2 md:px-6 md:py-3 rounded-sm shadow-xl animate-bounce duration-[4000ms]">
+                            <span
+                                class="block text-[10px] md:text-xs text-gray-300 uppercase tracking-widest">Purity</span>
+                            <span class="block text-lg md:text-xl font-bold text-white">100% Isolate</span>
                         </div>
                     </div>
                 </div>
 
-                <div class="order-1 lg:order-2">
-                    <span class="px-3 py-1 border border-boost-accent text-boost-accent text-[10px] font-bold uppercase tracking-widest mb-6 inline-block">Nutrition Division</span>
-                    <h2 class="text-6xl md:text-8xl font-display font-bold text-white uppercase leading-[0.9] mb-8">
-                        Fuel The <br> <span class="text-transparent bg-clip-text bg-gradient-to-r from-boost-accent to-white">Engine</span>
+                <div class="order-1 lg:order-2 text-center lg:text-left">
+                    <span
+                        class="px-3 py-1 border border-boost-accent text-boost-accent text-[10px] font-bold uppercase tracking-widest mb-6 inline-block">Nutrition
+                        Division</span>
+                    <h2
+                        class="text-4xl md:text-6xl lg:text-8xl font-display font-bold text-white uppercase leading-[0.9] mb-6 md:mb-8">
+                        Fuel The <br> <span
+                            class="text-transparent bg-clip-text bg-gradient-to-r from-boost-accent to-white">Engine</span>
                     </h2>
-                    <p class="text-gray-400 text-lg mb-12 leading-relaxed font-light max-w-md">
-                        Boost Nutrition™ isn't a supplement. It's a necessity. Engineered for rapid uptake and maximum synthesis.
+                    <p
+                        class="text-gray-400 text-base md:text-lg mb-8 md:mb-12 leading-relaxed font-light max-w-md mx-auto lg:mx-0">
+                        Boost Nutrition™ isn't a supplement. It's a necessity. Engineered for rapid uptake and maximum
+                        synthesis.
                     </p>
-                    <a href="#" class="inline-flex items-center gap-4 text-boost-accent font-bold uppercase tracking-widest text-sm hover:text-white transition-colors">
+                    <a href="#"
+                        class="inline-flex items-center gap-4 text-boost-accent font-bold uppercase tracking-widest text-sm hover:text-white transition-colors">
                         Go To Shop <i class="fa-solid fa-arrow-right"></i>
                     </a>
                 </div>
@@ -340,254 +468,327 @@
         </div>
     </section>
 
-    <!-- NEW: Master Coaches Section (Motivation via Authority) -->
-    <section class="py-40 bg-boost-charcoal" id="coaches">
+    <section class="py-20 md:py-40 bg-boost-charcoal" id="coaches">
         <div class="max-w-screen-2xl mx-auto px-6">
-            <div class="mb-20 text-center">
-                <span class="text-boost-accent font-bold tracking-widest text-xs uppercase mb-4 block">The Architects</span>
-                <h2 class="text-5xl md:text-7xl font-display font-bold text-white uppercase">Master Coaches</h2>
+            <div class="mb-12 md:mb-20 text-center">
+                <span class="text-boost-accent font-bold tracking-widest text-xs uppercase mb-4 block">The
+                    Architects</span>
+                <h2 class="text-4xl md:text-7xl font-display font-bold text-white uppercase">Master Coaches</h2>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <!-- Coach 1 -->
-                <div class="group relative h-[600px] overflow-hidden border border-white/5">
-                    <img src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=2574&auto=format&fit=crop" class="absolute inset-0 w-full h-full object-cover grayscale transition-transform duration-700 group-hover:scale-110 group-hover:grayscale-0" alt="Coach">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-90"></div>
-                    <div class="absolute bottom-0 left-0 p-8 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
-                        <h3 class="text-3xl font-display font-bold text-white mb-1">Alex Sterling</h3>
-                        <p class="text-boost-accent text-xs font-bold uppercase tracking-widest mb-4">Elite Performance Director</p>
-                        <p class="text-gray-400 text-sm opacity-0 group-hover:opacity-100 transition-opacity delay-100">"Pain is just weakness leaving the body. I build warriors, not just athletes."</p>
+                <div class="group relative h-[450px] md:h-[600px] overflow-hidden border border-white/5">
+                    <img src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=2574&auto=format&fit=crop"
+                        class="absolute inset-0 w-full h-full object-cover grayscale transition-transform duration-700 group-hover:scale-110 group-hover:grayscale-0"
+                        alt="Coach">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-90">
+                    </div>
+                    <div
+                        class="absolute bottom-0 left-0 p-6 md:p-8 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+                        <h3 class="text-2xl md:text-3xl font-display font-bold text-white mb-1">Alex Sterling</h3>
+                        <p class="text-boost-accent text-[10px] md:text-xs font-bold uppercase tracking-widest mb-4">
+                            Elite Performance Director</p>
+                        <p
+                            class="text-gray-400 text-xs md:text-sm opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity delay-100">
+                            "Pain is just weakness leaving the body. I build warriors, not just athletes."</p>
                     </div>
                 </div>
 
-                <!-- Coach 2 -->
-                <div class="group relative h-[600px] overflow-hidden border border-white/5 mt-0 md:-mt-12">
-                    <img src="https://images.unsplash.com/photo-1517836357463-d25dfeac3438?q=80&w=2670&auto=format&fit=crop" class="absolute inset-0 w-full h-full object-cover grayscale transition-transform duration-700 group-hover:scale-110 group-hover:grayscale-0" alt="Coach">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-90"></div>
-                    <div class="absolute bottom-0 left-0 p-8 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
-                        <h3 class="text-3xl font-display font-bold text-white mb-1">Sarah Vance</h3>
-                        <p class="text-boost-accent text-xs font-bold uppercase tracking-widest mb-4">Functional Strength Lead</p>
-                        <p class="text-gray-400 text-sm opacity-0 group-hover:opacity-100 transition-opacity delay-100">"Your body is a machine. My job is to tune it to perfection."</p>
+                <div class="group relative h-[450px] md:h-[600px] overflow-hidden border border-white/5 mt-0 md:-mt-12">
+                    <img src="https://images.unsplash.com/photo-1517836357463-d25dfeac3438?q=80&w=2670&auto=format&fit=crop"
+                        class="absolute inset-0 w-full h-full object-cover grayscale transition-transform duration-700 group-hover:scale-110 group-hover:grayscale-0"
+                        alt="Coach">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-90">
+                    </div>
+                    <div
+                        class="absolute bottom-0 left-0 p-6 md:p-8 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+                        <h3 class="text-2xl md:text-3xl font-display font-bold text-white mb-1">Sarah Vance</h3>
+                        <p class="text-boost-accent text-[10px] md:text-xs font-bold uppercase tracking-widest mb-4">
+                            Functional Strength Lead</p>
+                        <p
+                            class="text-gray-400 text-xs md:text-sm opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity delay-100">
+                            "Your body is a machine. My job is to tune it to perfection."</p>
                     </div>
                 </div>
 
-                <!-- Coach 3 -->
-                <div class="group relative h-[600px] overflow-hidden border border-white/5">
-                    <img src="https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?q=80&w=2670&auto=format&fit=crop" class="absolute inset-0 w-full h-full object-cover grayscale transition-transform duration-700 group-hover:scale-110 group-hover:grayscale-0" alt="Coach">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-90"></div>
-                    <div class="absolute bottom-0 left-0 p-8 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
-                        <h3 class="text-3xl font-display font-bold text-white mb-1">Marcus Kane</h3>
-                        <p class="text-boost-accent text-xs font-bold uppercase tracking-widest mb-4">Combat & HIIT Specialist</p>
-                        <p class="text-gray-400 text-sm opacity-0 group-hover:opacity-100 transition-opacity delay-100">"Speed kills. We train fast, we fight hard, we win."</p>
+                <div class="group relative h-[450px] md:h-[600px] overflow-hidden border border-white/5">
+                    <img src="https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?q=80&w=2670&auto=format&fit=crop"
+                        class="absolute inset-0 w-full h-full object-cover grayscale transition-transform duration-700 group-hover:scale-110 group-hover:grayscale-0"
+                        alt="Coach">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-90">
+                    </div>
+                    <div
+                        class="absolute bottom-0 left-0 p-6 md:p-8 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+                        <h3 class="text-2xl md:text-3xl font-display font-bold text-white mb-1">Marcus Kane</h3>
+                        <p class="text-boost-accent text-[10px] md:text-xs font-bold uppercase tracking-widest mb-4">
+                            Combat & HIIT Specialist</p>
+                        <p
+                            class="text-gray-400 text-xs md:text-sm opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity delay-100">
+                            "Speed kills. We train fast, we fight hard, we win."</p>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- NEW: Testimonials / Motivation Section -->
-    <section class="py-32 bg-boost-black relative">
-        <div class="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
-        <div class="max-w-screen-xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+    <section class="py-20 md:py-32 bg-boost-black relative">
+        <div class="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent">
+        </div>
+        <div class="max-w-screen-xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-12 md:gap-20 items-center">
             <div>
-                <i class="fa-solid fa-quote-left text-6xl text-boost-accent mb-8 opacity-50"></i>
-                <h2 class="text-4xl md:text-6xl font-display font-bold text-white uppercase leading-tight mb-8">
-                    Defined By <span class="text-transparent bg-clip-text bg-gradient-to-r from-boost-accent to-white">Discipline</span>
+                <i class="fa-solid fa-quote-left text-4xl md:text-6xl text-boost-accent mb-6 md:mb-8 opacity-50"></i>
+                <h2 class="text-3xl md:text-6xl font-display font-bold text-white uppercase leading-tight mb-6 md:mb-8">
+                    Defined By <span
+                        class="text-transparent bg-clip-text bg-gradient-to-r from-boost-accent to-white">Discipline</span>
                 </h2>
-                <p class="text-xl text-gray-300 italic mb-8 leading-relaxed font-light">
-                    "I walked into Boost broken. I walked out reborn. This isn't just a gym; it's a crucible where you burn away who you were to become who you need to be."
+                <p class="text-lg md:text-xl text-gray-300 italic mb-8 leading-relaxed font-light">
+                    "I walked into Boost broken. I walked out reborn. This isn't just a gym; it's a crucible where you
+                    burn away who you were to become who you need to be."
                 </p>
                 <div class="flex items-center gap-4">
-                    <div class="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center text-white font-bold">JD</div>
+                    <div
+                        class="w-10 h-10 md:w-12 md:h-12 bg-white/10 rounded-full flex items-center justify-center text-white font-bold">
+                        JD</div>
                     <div>
-                        <p class="text-white font-bold uppercase tracking-wider">James D.</p>
+                        <p class="text-white font-bold uppercase tracking-wider text-sm">James D.</p>
                         <p class="text-boost-accent text-xs">Member since 2021</p>
                     </div>
                 </div>
             </div>
-            <div class="relative">
-                <div class="grid grid-cols-2 gap-4">
-                    <div class="bg-boost-charcoal p-8 border border-white/5 hover:border-boost-accent transition-colors duration-300">
-                        <h4 class="text-4xl font-display font-bold text-white mb-2">12<span class="text-boost-accent text-lg">KG</span></h4>
-                        <p class="text-gray-500 text-xs uppercase tracking-widest">Muscle Gained</p>
+            <div class="relative mt-8 md:mt-0">
+                <div class="grid grid-cols-2 gap-3 md:gap-4">
+                    <div
+                        class="bg-boost-charcoal p-4 md:p-8 border border-white/5 hover:border-boost-accent transition-colors duration-300">
+                        <h4 class="text-2xl md:text-4xl font-display font-bold text-white mb-2">12<span
+                                class="text-boost-accent text-sm md:text-lg">KG</span></h4>
+                        <p class="text-gray-500 text-[10px] md:text-xs uppercase tracking-widest">Muscle Gained</p>
                     </div>
-                    <div class="bg-boost-charcoal p-8 border border-white/5 hover:border-boost-accent transition-colors duration-300 translate-y-8">
-                        <h4 class="text-4xl font-display font-bold text-white mb-2">15<span class="text-boost-accent text-lg">%</span></h4>
-                        <p class="text-gray-500 text-xs uppercase tracking-widest">Fat Loss</p>
+                    <div
+                        class="bg-boost-charcoal p-4 md:p-8 border border-white/5 hover:border-boost-accent transition-colors duration-300 md:translate-y-8">
+                        <h4 class="text-2xl md:text-4xl font-display font-bold text-white mb-2">15<span
+                                class="text-boost-accent text-sm md:text-lg">%</span></h4>
+                        <p class="text-gray-500 text-[10px] md:text-xs uppercase tracking-widest">Fat Loss</p>
                     </div>
-                    <div class="bg-boost-charcoal p-8 border border-white/5 hover:border-boost-accent transition-colors duration-300">
-                        <h4 class="text-4xl font-display font-bold text-white mb-2">180<span class="text-boost-accent text-lg">Days</span></h4>
-                        <p class="text-gray-500 text-xs uppercase tracking-widest">Consistency</p>
+                    <div
+                        class="bg-boost-charcoal p-4 md:p-8 border border-white/5 hover:border-boost-accent transition-colors duration-300">
+                        <h4 class="text-2xl md:text-4xl font-display font-bold text-white mb-2">180<span
+                                class="text-boost-accent text-sm md:text-lg">Days</span></h4>
+                        <p class="text-gray-500 text-[10px] md:text-xs uppercase tracking-widest">Consistency</p>
                     </div>
-                    <div class="bg-boost-charcoal p-8 border border-white/5 hover:border-boost-accent transition-colors duration-300 translate-y-8">
-                        <h4 class="text-4xl font-display font-bold text-white mb-2">100<span class="text-boost-accent text-lg">%</span></h4>
-                        <p class="text-gray-500 text-xs uppercase tracking-widest">Focus</p>
+                    <div
+                        class="bg-boost-charcoal p-4 md:p-8 border border-white/5 hover:border-boost-accent transition-colors duration-300 md:translate-y-8">
+                        <h4 class="text-2xl md:text-4xl font-display font-bold text-white mb-2">100<span
+                                class="text-boost-accent text-sm md:text-lg">%</span></h4>
+                        <p class="text-gray-500 text-[10px] md:text-xs uppercase tracking-widest">Focus</p>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Programs (Spotlight Grid) -->
-    <section class="py-40 bg-boost-charcoal" id="programs">
+    <section class="py-20 md:py-40 bg-boost-charcoal" id="programs">
         <div class="max-w-screen-2xl mx-auto px-6">
-            <div class="flex flex-col md:flex-row justify-between items-end mb-20">
-                <div class="max-w-2xl">
-                    <h2 class="text-5xl md:text-7xl font-display font-bold text-white uppercase mb-6">Disciplines</h2>
-                    <p class="text-gray-400">Curated training paths for specific physiological adaptations.</p>
+            <div class="flex flex-col md:flex-row justify-between items-end mb-12 md:mb-20">
+                <div class="max-w-2xl mb-6 md:mb-0">
+                    <h2 class="text-4xl md:text-7xl font-display font-bold text-white uppercase mb-4 md:mb-6">
+                        Disciplines</h2>
+                    <p class="text-gray-400 text-sm md:text-base">Curated training paths for specific physiological
+                        adaptations.</p>
                 </div>
                 <div class="hidden md:block">
-                    <button class="w-16 h-16 border border-white/10 hover:bg-white hover:text-black transition-all rounded-full flex items-center justify-center">
+                    <button
+                        class="w-16 h-16 border border-white/10 hover:bg-white hover:text-black transition-all rounded-full flex items-center justify-center">
                         <i class="fa-solid fa-arrow-down"></i>
                     </button>
                 </div>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-4 gap-1 h-auto" id="cards-container">
-                <div class="md:col-span-2 md:row-span-2 spotlight-card h-[600px] group cursor-pointer">
+                <div class="md:col-span-2 md:row-span-2 spotlight-card h-[400px] md:h-[600px] group cursor-pointer">
                     <div class="absolute inset-0 bg-black/40 z-10"></div>
-                    <img src="https://images.unsplash.com/photo-1517963879466-e1b54ebd512d?q=80&w=2568&auto=format&fit=crop" class="w-full h-full object-cover opacity-60 group-hover:scale-105 transition-transform duration-700" alt="Strength">
-                    <div class="absolute inset-0 p-10 flex flex-col justify-end z-20">
-                        <h3 class="text-4xl font-display font-bold text-white mb-2 translate-y-4 group-hover:translate-y-0 transition-transform">Hypertrophy</h3>
-                        <p class="text-gray-300 opacity-0 group-hover:opacity-100 transition-opacity delay-100 duration-500 max-w-md">Maximum muscle volume through mechanical tension and metabolic stress.</p>
+                    <img src="https://images.unsplash.com/photo-1517963879466-e1b54ebd512d?q=80&w=2568&auto=format&fit=crop"
+                        class="w-full h-full object-cover opacity-60 group-hover:scale-105 transition-transform duration-700"
+                        alt="Strength">
+                    <div class="absolute inset-0 p-6 md:p-10 flex flex-col justify-end z-20">
+                        <h3
+                            class="text-2xl md:text-4xl font-display font-bold text-white mb-2 translate-y-0 md:translate-y-4 md:group-hover:translate-y-0 transition-transform">
+                            Hypertrophy</h3>
+                        <p
+                            class="text-gray-300 text-sm opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity delay-100 duration-500 max-w-md">
+                            Maximum muscle volume through mechanical tension and metabolic stress.</p>
                     </div>
                 </div>
-                <div class="spotlight-card h-[300px] group cursor-pointer">
-                    <div class="absolute inset-0 p-8 flex flex-col justify-between z-20">
-                         <div class="flex justify-between items-start">
-                             <span class="text-xs font-bold border border-white/20 px-2 py-1 uppercase text-gray-400">Cardio</span>
-                             <i class="fa-solid fa-heart-pulse text-2xl text-boost-accent"></i>
-                         </div>
-                         <div>
-                             <h3 class="text-2xl font-display font-bold text-white mb-1">Metcon</h3>
-                             <p class="text-xs text-gray-500">High intensity conditioning.</p>
-                         </div>
+                <div class="spotlight-card h-[250px] md:h-[300px] group cursor-pointer">
+                    <div class="absolute inset-0 p-6 md:p-8 flex flex-col justify-between z-20">
+                        <div class="flex justify-between items-start">
+                            <span
+                                class="text-xs font-bold border border-white/20 px-2 py-1 uppercase text-gray-400">Cardio</span>
+                            <i class="fa-solid fa-heart-pulse text-2xl text-boost-accent"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl md:text-2xl font-display font-bold text-white mb-1">Metcon</h3>
+                            <p class="text-xs text-gray-500">High intensity conditioning.</p>
+                        </div>
                     </div>
-                    <div class="absolute inset-0 bg-gradient-to-br from-boost-accent/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    <div
+                        class="absolute inset-0 bg-gradient-to-br from-boost-accent/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
+                    </div>
                 </div>
-                <div class="spotlight-card h-[300px] group cursor-pointer bg-boost-accent">
+                <div class="spotlight-card h-[250px] md:h-[300px] group cursor-pointer bg-boost-accent">
                     <div class="absolute inset-0 flex items-center justify-center">
                         <div class="text-center group-hover:scale-110 transition-transform">
-                            <h3 class="text-6xl font-display font-bold text-white mb-2">HIIT</h3>
+                            <h3 class="text-5xl md:text-6xl font-display font-bold text-white mb-2">HIIT</h3>
                             <p class="text-xs font-bold uppercase tracking-widest text-black">Burn Zone</p>
                         </div>
                     </div>
                 </div>
-                <div class="md:col-span-2 spotlight-card h-[300px] group cursor-pointer">
-                    <img src="https://images.unsplash.com/photo-1549476464-37392f717541?q=80&w=2574&auto=format&fit=crop" class="w-full h-full object-cover opacity-40 group-hover:opacity-60 transition-opacity" alt="Boxing">
+                <div class="md:col-span-2 spotlight-card h-[250px] md:h-[300px] group cursor-pointer">
+                    <img src="https://images.unsplash.com/photo-1549476464-37392f717541?q=80&w=2574&auto=format&fit=crop"
+                        class="w-full h-full object-cover opacity-40 group-hover:opacity-60 transition-opacity"
+                        alt="Boxing">
                     <div class="absolute inset-0 flex items-center justify-center z-20">
-                         <h3 class="text-4xl font-display font-bold text-white uppercase tracking-widest border-y-2 border-transparent group-hover:border-boost-accent py-2 transition-all">Combat</h3>
+                        <h3
+                            class="text-3xl md:text-4xl font-display font-bold text-white uppercase tracking-widest border-y-2 border-transparent group-hover:border-boost-accent py-2 transition-all">
+                            Combat</h3>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- NEW: Global Network (Locations) -->
-    <section class="py-40 bg-boost-black" id="locations">
+    <section class="py-20 md:py-40 bg-boost-charcoal" id="locations">
         <div class="max-w-screen-xl mx-auto px-6">
-            <div class="text-center mb-24">
-                <span class="text-boost-accent font-bold tracking-widest text-xs uppercase mb-4 block">Our Footprint</span>
-                <h2 class="text-5xl md:text-7xl font-display font-bold text-white uppercase">Global Network</h2>
+            <div class="text-center mb-16 md:mb-24">
+                <span class="text-boost-accent font-bold tracking-widest text-xs uppercase mb-4 block">Our
+                    Footprint</span>
+                <h2 class="text-4xl md:text-7xl font-display font-bold text-white uppercase">Global Network</h2>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
-                <!-- Location 1 -->
-                <div class="border-l border-white/10 pl-8 hover:border-boost-accent transition-colors duration-500 group">
-                    <span class="text-6xl font-display font-bold text-white/10 absolute -ml-12 -mt-4 group-hover:text-boost-accent/10 transition-colors">01</span>
-                    <h3 class="text-3xl font-display font-bold text-white mb-4 relative">New York <span class="text-boost-accent text-sm align-top">HQ</span></h3>
+                <div
+                    class="border-l border-white/10 pl-8 hover:border-boost-accent transition-colors duration-500 group">
+                    <span
+                        class="text-5xl md:text-6xl font-display font-bold text-white/10 absolute -ml-12 -mt-4 group-hover:text-boost-accent/10 transition-colors">01</span>
+                    <h3 class="text-2xl md:text-3xl font-display font-bold text-white mb-4 relative">New York <span
+                            class="text-boost-accent text-sm align-top">HQ</span></h3>
                     <p class="text-gray-400 text-sm leading-relaxed mb-6">
                         55 Hudson Yards<br>
                         New York, NY 10001<br>
                         United States
                     </p>
-                    <a href="#" class="text-xs font-bold uppercase tracking-widest text-white hover:text-boost-accent transition-colors">View Map &rarr;</a>
+                    <a href="#"
+                        class="text-xs font-bold uppercase tracking-widest text-white hover:text-boost-accent transition-colors">View
+                        Map &rarr;</a>
                 </div>
 
-                <!-- Location 2 -->
-                <div class="border-l border-white/10 pl-8 hover:border-boost-accent transition-colors duration-500 group">
-                    <span class="text-6xl font-display font-bold text-white/10 absolute -ml-12 -mt-4 group-hover:text-boost-accent/10 transition-colors">02</span>
-                    <h3 class="text-3xl font-display font-bold text-white mb-4 relative">London</h3>
+                <div
+                    class="border-l border-white/10 pl-8 hover:border-boost-accent transition-colors duration-500 group">
+                    <span
+                        class="text-5xl md:text-6xl font-display font-bold text-white/10 absolute -ml-12 -mt-4 group-hover:text-boost-accent/10 transition-colors">02</span>
+                    <h3 class="text-2xl md:text-3xl font-display font-bold text-white mb-4 relative">London</h3>
                     <p class="text-gray-400 text-sm leading-relaxed mb-6">
                         100 Bishopsgate<br>
                         London EC2M 1GT<br>
                         United Kingdom
                     </p>
-                    <a href="#" class="text-xs font-bold uppercase tracking-widest text-white hover:text-boost-accent transition-colors">View Map &rarr;</a>
+                    <a href="#"
+                        class="text-xs font-bold uppercase tracking-widest text-white hover:text-boost-accent transition-colors">View
+                        Map &rarr;</a>
                 </div>
 
-                <!-- Location 3 -->
-                <div class="border-l border-white/10 pl-8 hover:border-boost-accent transition-colors duration-500 group">
-                    <span class="text-6xl font-display font-bold text-white/10 absolute -ml-12 -mt-4 group-hover:text-boost-accent/10 transition-colors">03</span>
-                    <h3 class="text-3xl font-display font-bold text-white mb-4 relative">Tokyo</h3>
+                <div
+                    class="border-l border-white/10 pl-8 hover:border-boost-accent transition-colors duration-500 group">
+                    <span
+                        class="text-5xl md:text-6xl font-display font-bold text-white/10 absolute -ml-12 -mt-4 group-hover:text-boost-accent/10 transition-colors">03</span>
+                    <h3 class="text-2xl md:text-3xl font-display font-bold text-white mb-4 relative">Tokyo</h3>
                     <p class="text-gray-400 text-sm leading-relaxed mb-6">
                         Minato City, Akasaka<br>
                         9 Chome−7−1<br>
                         Japan
                     </p>
-                    <a href="#" class="text-xs font-bold uppercase tracking-widest text-white hover:text-boost-accent transition-colors">View Map &rarr;</a>
+                    <a href="#"
+                        class="text-xs font-bold uppercase tracking-widest text-white hover:text-boost-accent transition-colors">View
+                        Map &rarr;</a>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Pricing (Minimalist) -->
-    <section class="py-40 bg-boost-charcoal border-t border-white/5" id="membership">
+    <section class="py-20 md:py-40 bg-boost-charcoal border-t border-white/5" id="membership">
         <div class="max-w-screen-xl mx-auto px-6">
-            <h2 class="text-center text-4xl md:text-5xl font-display font-bold text-white uppercase mb-20">Access Levels</h2>
-            
+            <h2 class="text-center text-3xl md:text-5xl font-display font-bold text-white uppercase mb-12 md:mb-20">
+                Access Levels</h2>
+
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <div class="p-8 border border-white/5 hover:border-white/20 transition-all duration-300 group">
                     <div class="mb-8">
                         <span class="block text-gray-500 text-xs font-bold uppercase tracking-widest mb-2">Base</span>
-                        <div class="text-4xl font-bold text-white">$50<span class="text-sm font-normal text-gray-600">/mo</span></div>
+                        <div class="text-4xl font-bold text-white">$50<span
+                                class="text-sm font-normal text-gray-600">/mo</span></div>
                     </div>
                     <ul class="space-y-4 mb-12 text-sm text-gray-400">
-                        <li class="flex items-center gap-3"><i class="fa-solid fa-check text-xs text-boost-accent"></i> Gym Access (Off-Peak)</li>
-                        <li class="flex items-center gap-3"><i class="fa-solid fa-check text-xs text-boost-accent"></i> Locker Use</li>
+                        <li class="flex items-center gap-3"><i class="fa-solid fa-check text-xs text-boost-accent"></i>
+                            Gym Access (Off-Peak)</li>
+                        <li class="flex items-center gap-3"><i class="fa-solid fa-check text-xs text-boost-accent"></i>
+                            Locker Use</li>
                     </ul>
-                    <a href="#" class="block w-full py-4 text-center border border-white/20 text-xs font-bold uppercase tracking-widest text-white hover:bg-white hover:text-black transition-colors">Select</a>
+                    <a href="#"
+                        class="block w-full py-4 text-center border border-white/20 text-xs font-bold uppercase tracking-widest text-white hover:bg-white hover:text-black transition-colors">Select</a>
                 </div>
 
-                <div class="p-8 bg-boost-black border border-boost-accent/30 relative transform lg:-translate-y-4 shadow-2xl shadow-boost-accent/10">
+                <div
+                    class="p-8 bg-boost-black border border-boost-accent/30 relative transform lg:-translate-y-4 shadow-2xl shadow-boost-accent/10 order-first md:order-none">
                     <div class="mb-8">
-                         <span class="block text-boost-accent text-xs font-bold uppercase tracking-widest mb-2">Pro Athlete</span>
-                         <div class="text-5xl font-bold text-white">$85<span class="text-sm font-normal text-gray-600">/mo</span></div>
+                        <span class="block text-boost-accent text-xs font-bold uppercase tracking-widest mb-2">Pro
+                            Athlete</span>
+                        <div class="text-5xl font-bold text-white">$85<span
+                                class="text-sm font-normal text-gray-600">/mo</span></div>
                     </div>
                     <ul class="space-y-4 mb-12 text-sm text-gray-300">
-                        <li class="flex items-center gap-3"><i class="fa-solid fa-check text-xs text-boost-accent"></i> 24/7 Biometric Access</li>
-                        <li class="flex items-center gap-3"><i class="fa-solid fa-check text-xs text-boost-accent"></i> All Group Classes</li>
-                        <li class="flex items-center gap-3"><i class="fa-solid fa-check text-xs text-boost-accent"></i> Recovery Lounge</li>
+                        <li class="flex items-center gap-3"><i class="fa-solid fa-check text-xs text-boost-accent"></i>
+                            24/7 Biometric Access</li>
+                        <li class="flex items-center gap-3"><i class="fa-solid fa-check text-xs text-boost-accent"></i>
+                            All Group Classes</li>
+                        <li class="flex items-center gap-3"><i class="fa-solid fa-check text-xs text-boost-accent"></i>
+                            Recovery Lounge</li>
                     </ul>
-                    <a href="#" class="block w-full py-4 text-center bg-boost-accent text-xs font-bold uppercase tracking-widest text-white hover:bg-white hover:text-black transition-colors">Select Plan</a>
+                    <a href="#"
+                        class="block w-full py-4 text-center bg-boost-accent text-xs font-bold uppercase tracking-widest text-white hover:bg-white hover:text-black transition-colors">Select
+                        Plan</a>
                 </div>
 
                 <div class="p-8 border border-white/5 hover:border-white/20 transition-all duration-300 group">
                     <div class="mb-8">
                         <span class="block text-gray-500 text-xs font-bold uppercase tracking-widest mb-2">Elite</span>
-                        <div class="text-4xl font-bold text-white">$120<span class="text-sm font-normal text-gray-600">/mo</span></div>
+                        <div class="text-4xl font-bold text-white">$120<span
+                                class="text-sm font-normal text-gray-600">/mo</span></div>
                     </div>
                     <ul class="space-y-4 mb-12 text-sm text-gray-400">
-                        <li class="flex items-center gap-3"><i class="fa-solid fa-check text-xs text-boost-accent"></i> All Pro Features</li>
-                        <li class="flex items-center gap-3"><i class="fa-solid fa-check text-xs text-boost-accent"></i> Private Locker</li>
-                        <li class="flex items-center gap-3"><i class="fa-solid fa-check text-xs text-boost-accent"></i> Monthly PT Session</li>
+                        <li class="flex items-center gap-3"><i class="fa-solid fa-check text-xs text-boost-accent"></i>
+                            All Pro Features</li>
+                        <li class="flex items-center gap-3"><i class="fa-solid fa-check text-xs text-boost-accent"></i>
+                            Private Locker</li>
+                        <li class="flex items-center gap-3"><i class="fa-solid fa-check text-xs text-boost-accent"></i>
+                            Monthly PT Session</li>
                     </ul>
-                    <a href="#" class="block w-full py-4 text-center border border-white/20 text-xs font-bold uppercase tracking-widest text-white hover:bg-white hover:text-black transition-colors">Select</a>
+                    <a href="#"
+                        class="block w-full py-4 text-center border border-white/20 text-xs font-bold uppercase tracking-widest text-white hover:bg-white hover:text-black transition-colors">Select</a>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Footer -->
-    <footer class="bg-black pt-32 pb-12 border-t border-white/5">
+    <footer class="bg-black pt-20 md:pt-32 pb-12 border-t border-white/5 overflow-hidden">
         <div class="max-w-screen-2xl mx-auto px-6">
-            <div class="flex flex-col md:flex-row justify-between items-start mb-20 gap-10">
+            <div class="flex flex-col md:flex-row justify-between items-start mb-10 md:mb-20 gap-10">
                 <div>
-                    <h2 class="text-[12rem] leading-none font-display font-bold text-white opacity-10 select-none -ml-4">BOOST</h2>
+                    <h2
+                        class="text-6xl md:text-[12rem] leading-none font-display font-bold text-white opacity-10 select-none md:-ml-4">
+                        BOOST</h2>
                 </div>
-                <div class="flex gap-20 pt-10">
+                <div class="flex flex-col md:flex-row gap-10 md:gap-20 md:pt-10">
                     <div>
-                        <h4 class="text-white font-bold uppercase tracking-widest text-xs mb-8">Location</h4>
+                        <h4 class="text-white font-bold uppercase tracking-widest text-xs mb-6 md:mb-8">Location</h4>
                         <p class="text-gray-500 text-sm leading-relaxed">
                             100 Iron Street<br>
                             Industrial District<br>
@@ -595,7 +796,7 @@
                         </p>
                     </div>
                     <div>
-                        <h4 class="text-white font-bold uppercase tracking-widest text-xs mb-8">Social</h4>
+                        <h4 class="text-white font-bold uppercase tracking-widest text-xs mb-6 md:mb-8">Social</h4>
                         <ul class="space-y-4 text-gray-500 text-sm">
                             <li><a href="#" class="hover:text-white transition-colors">Instagram</a></li>
                             <li><a href="#" class="hover:text-white transition-colors">Twitter</a></li>
@@ -604,23 +805,49 @@
                     </div>
                 </div>
             </div>
-            
-            <div class="flex justify-between items-center text-[10px] text-gray-600 uppercase tracking-widest border-t border-white/5 pt-8">
+
+            <div
+                class="flex flex-col md:flex-row justify-between items-center text-[10px] text-gray-600 uppercase tracking-widest border-t border-white/5 pt-8 gap-4 md:gap-0">
                 <p>&copy; 2024 Boost Performance Inc.</p>
-                <div class="text-right">
+                <div class="text-center md:text-right">
                     <p>Designed for Greatness</p>
-                    <p class="mt-2 text-[9px] text-gray-500">Created and Developed by <span class="text-boost-accent">Team Texnox</span></p>
+                    <p class="mt-2 text-[9px] text-gray-500">Created and Developed by <span
+                            class="text-boost-accent">Team Texnox</span></p>
                 </div>
             </div>
         </div>
     </footer>
 
-    <!-- GSAP Scripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
 
     <script>
         gsap.registerPlugin(ScrollTrigger);
+
+        // Mobile Menu Logic
+        const mobileBtn = document.getElementById('mobile-menu-btn');
+        // New Bottom Menu Button Logic
+        const bottomMenuBtn = document.getElementById('bottom-menu-btn');
+
+        const closeBtn = document.getElementById('close-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileLinks = document.querySelectorAll('.mobile-link');
+
+        function toggleMenu() {
+            mobileMenu.classList.toggle('translate-x-full');
+            document.body.classList.toggle('overflow-hidden');
+        }
+
+        if (mobileBtn) mobileBtn.addEventListener('click', toggleMenu);
+        // Hook new bottom button to same logic
+        if (bottomMenuBtn) bottomMenuBtn.addEventListener('click', toggleMenu);
+
+        closeBtn.addEventListener('click', toggleMenu);
+
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', toggleMenu);
+        });
+
 
         // Preloader Logic
         window.addEventListener('load', () => {
@@ -632,69 +859,74 @@
                 stagger: 0.1,
                 ease: "power2.inOut"
             })
-            .to("#preloader h2", {
-                opacity: 0,
-                duration: 0.3
-            })
-            .to(".loader-bar", {
-                height: "0%",
-                y: "100%", // Slide down
-                duration: 0.5,
-                stagger: 0.1,
-                ease: "power2.inOut"
-            })
-            .to("#preloader", {
-                yPercent: -100,
-                duration: 0.8,
-                ease: "expo.inOut"
-            }, "-=0.2")
-            .from("#hero-bg", {
-                scale: 1.2,
-                duration: 2,
-                ease: "power2.out"
-            }, "-=0.5")
-            .to(".reveal-text", {
-                yPercent: -100, // Reveal upwards
-                y: 0,
-                opacity: 1, // Ensure visibility
-                duration: 1,
-                stagger: 0.15,
-                ease: "expo.out",
-                // Reset CSS transform manually if needed for reveal
-                onStart: function() {
-                    gsap.set(".reveal-text", { yPercent: 100 });
-                }
-            }, "-=1.5")
-            .to(".animate-fade-in", {
-                opacity: 1,
-                y: 0,
-                duration: 1,
-                stagger: 0.2,
-                ease: "power2.out"
-            }, "-=1");
+                .to("#preloader h2", {
+                    opacity: 0,
+                    duration: 0.3
+                })
+                .to(".loader-bar", {
+                    height: "0%",
+                    y: "100%", // Slide down
+                    duration: 0.5,
+                    stagger: 0.1,
+                    ease: "power2.inOut"
+                })
+                .to("#preloader", {
+                    yPercent: -100,
+                    duration: 0.8,
+                    ease: "expo.inOut"
+                }, "-=0.2")
+                .from("#hero-bg", {
+                    scale: 1.2,
+                    duration: 2,
+                    ease: "power2.out"
+                }, "-=0.5")
+                .fromTo(".reveal-text", {
+                    yPercent: 120,
+                    skewY: 7,
+                    opacity: 0
+                }, {
+                    yPercent: 0,
+                    skewY: 0,
+                    opacity: 1,
+                    duration: 1.5,
+                    stagger: 0.15,
+                    ease: "power4.out"
+                }, "-=1.5")
+                .to(".animate-fade-in", {
+                    opacity: 1,
+                    y: 0,
+                    duration: 1,
+                    stagger: 0.2,
+                    ease: "power2.out"
+                }, "-=1");
         });
 
-        // Mouse Spotlight Effect
-        const cards = document.querySelectorAll('.spotlight-card');
-        document.getElementById('cards-container').onmousemove = e => {
-            for(const card of cards) {
-                const rect = card.getBoundingClientRect(),
-                      x = e.clientX - rect.left,
-                      y = e.clientY - rect.top;
+        // Mouse Spotlight Effect (Desktop Only)
+        if (window.innerWidth > 768) {
+            const cards = document.querySelectorAll('.spotlight-card');
+            const container = document.getElementById('cards-container');
+            if (container) {
+                container.onmousemove = e => {
+                    for (const card of cards) {
+                        const rect = card.getBoundingClientRect(),
+                            x = e.clientX - rect.left,
+                            y = e.clientY - rect.top;
 
-                card.style.setProperty("--x", `${x}px`);
-                card.style.setProperty("--y", `${y}px`);
+                        card.style.setProperty("--x", `${x}px`);
+                        card.style.setProperty("--y", `${y}px`);
+                    }
+                };
             }
-        };
+        }
 
-        // Magnetic Buttons (Simple implementation)
+        // Magnetic Buttons
         const magnetics = document.querySelectorAll('.magnetic-btn');
         magnetics.forEach(btn => {
             btn.addEventListener('mousemove', (e) => {
                 const rect = btn.getBoundingClientRect();
                 const x = e.clientX - rect.left - rect.width / 2;
                 const y = e.clientY - rect.top - rect.height / 2;
-                
+
                 gsap.to(btn, {
                     x: x * 0.2,
                     y: y * 0.2,
@@ -723,15 +955,17 @@
 
         // Marquee Loop
         const marquee = document.querySelector('.marquee-content');
-        const clone = marquee.cloneNode(true);
-        document.querySelector('.marquee-wrapper').appendChild(clone);
-        
-        gsap.to(".marquee-content", {
-            xPercent: -100,
-            repeat: -1,
-            duration: 40,
-            ease: "linear"
-        });
+        if (marquee) {
+            const clone = marquee.cloneNode(true);
+            document.querySelector('.marquee-wrapper').appendChild(clone);
+
+            gsap.to(".marquee-content", {
+                xPercent: -100,
+                repeat: -1,
+                duration: 40,
+                ease: "linear"
+            });
+        }
 
         // Parallax Background
         gsap.to("#hero-bg", {
@@ -746,4 +980,5 @@
 
     </script>
 </body>
+
 </html>

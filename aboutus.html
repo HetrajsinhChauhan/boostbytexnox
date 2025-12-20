@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>BOOST | The Origin</title>
+    <meta name="description" content="Boost Gym - Our story, philosophy, and the architects behind the machine.">
+    <meta name="theme-color" content="#030303">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&family=Syncopate:wght@400;700&family=JetBrains+Mono:wght@400;700&display=swap"
+        rel="stylesheet">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        boost: {
+                            black: '#030303',
+                            charcoal: '#0F0F0F',
+                            border: '#1F1F1F',
+                            accent: '#4F46E5',
+                            accentBright: '#818CF8',
+                            text: '#EDEDED',
+                            muted: '#888888',
+                        }
+                    },
+                    fontFamily: {
+                        display: ['Syncopate', 'sans-serif'],
+                        body: ['Manrope', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    backgroundImage: {
+                        'noise': "url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiB2aWV3Qm94PSIwIDAgNTEyIDUxMiI+PGZpbHRlciBpZD0ibm9pc2UiPjxmZVR1cmJ1bGVuY2UgdHlwZT0iZnJhY3RhbE5vaXNlIiBiYXNlRnJlcXVlbmN5PSIwLjY1IiBudW1PY3RhdmVzPSIzIiBzdGl0Y2hUaWxlcz0ic3RpdGNoIi8+PC9maWx0ZXI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsdGVyPSJ1cmwoI25vaXNlKSIgb3BhY2l0eT0iMC4wNSIvPjwvc3ZnPg==')",
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #030303;
+            color: #EDEDED;
+            overflow-x: hidden;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        .grain-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiB2aWV3Qm94PSIwIDAgNTEyIDUxMiI+PGZpbHRlciBpZD0ibm9pc2UiPjxmZVR1cmJ1bGVuY2UgdHlwZT0iZnJhY3RhbE5vaXNlIiBiYXNlRnJlcXVlbmN5PSIwLjY1IiBudW1PY3RhdmVzPSIzIiBzdGl0Y2hUaWxlcz0ic3RpdGNoIi8+PC9maWx0ZXI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsdGVyPSJ1cmwoI25vaXNlKSIgb3BhY2l0eT0iMC4wNSIvPjwvc3ZnPg==');
+            opacity: 0.05;
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        .nav-island {
+            background: rgba(20, 20, 20, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-island-link {
+            position: relative;
+            color: #888;
+            transition: color 0.3s ease;
+        }
+
+        .nav-island-link:hover {
+            color: #fff;
+        }
+
+        .nav-island-link::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 2px;
+            background-color: #4F46E5;
+            transition: width 0.3s ease;
+        }
+
+        .nav-island-link:hover::after {
+            width: 100%;
+        }
+
+        .bottom-nav-item {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: #666;
+            transition: all 0.3s ease;
+        }
+
+        .bottom-nav-item.active,
+        .bottom-nav-item:hover {
+            color: #4F46E5;
+        }
+
+        .spotlight-card {
+            position: relative;
+            background: rgba(20, 20, 20, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            overflow: hidden;
+            transition: border-color 0.3s;
+        }
+
+        .spotlight-card:hover {
+            border-color: rgba(79, 70, 229, 0.4);
+        }
+
+        @media (min-width: 768px) {
+            .spotlight-card::before {
+                content: '';
+                position: absolute;
+                top: var(--y, -50%);
+                left: var(--x, -50%);
+                width: 600px;
+                height: 600px;
+                background: radial-gradient(circle, rgba(79, 70, 229, 0.1), transparent 60%);
+                transform: translate(-50%, -50%);
+                opacity: 0;
+                transition: opacity 0.3s;
+                pointer-events: none;
+                z-index: 1;
+            }
+
+            .spotlight-card:hover::before {
+                opacity: 1;
+            }
+        }
+
+        .gsap-reveal {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .cursor-glow {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(79, 70, 229, 0.1), transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9998;
+            mix-blend-mode: screen;
+            opacity: 0;
+        }
+
+        /* Timeline Styles */
+        .timeline-line {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 1px;
+            background: linear-gradient(to bottom, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transform: translateX(-50%);
+        }
+
+        @media (max-width: 768px) {
+            .timeline-line {
+                left: 2rem;
+            }
+        }
+
+        .manifesto-text {
+            font-size: clamp(1.5rem, 4vw, 3.5rem);
+            line-height: 1.1;
+        }
+    </style>
+</head>
+
+<body class="font-body antialiased selection:bg-boost-accent selection:text-white pb-24 md:pb-0">
+
+    <div class="cursor-glow" id="cursor-glow"></div>
+    <div class="grain-overlay"></div>
+
+    <!-- Navigation -->
+    
+    <nav class="fixed top-0 w-full z-50 pt-6 px-6 md:px-12 pointer-events-none" id="navbar">
+        <div class="max-w-[1920px] mx-auto flex justify-between items-start">
+
+            <!-- Logo (Left) -->
+            <a href="index.html" class="pointer-events-auto flex items-center gap-3 group">
+                <div class="w-10 h-10 md:w-12 md:h-12 bg-white text-black flex items-center justify-center font-bold text-xl clip-slant hover:bg-boost-accent hover:text-white transition-colors duration-300"
+                    style="clip-path: polygon(15% 0, 100% 0, 85% 100%, 0% 100%);">
+                    <i class="fa-solid fa-bolt"></i>
+                </div>
+                <div class="hidden md:flex flex-col bg-black/50 backdrop-blur-sm p-2 rounded-r-lg">
+                    <span class="font-display font-bold text-xl tracking-widest text-white leading-none">BOOST</span>
+                    <span class="text-[9px] text-gray-400 uppercase tracking-[0.3em]">Performance</span>
+                </div>
+            </a>        
+
+            <!-- Menu Island (Center - Desktop Only) -->
+            <div
+                class="hidden lg:flex pointer-events-auto nav-island rounded-full px-10 py-4 gap-12 font-medium text-xs tracking-[0.2em] items-center mt-1">
+                <a href="index.html" class="nav-island-link">HOME</a>
+                <a href="tools.html" class="nav-island-link">TOOLS</a>
+                <a href="Membership.html" class="nav-island-link">MEMBERSHIP</a>
+                <a href="locartion.html" class="nav-island-link">LOCATIONS</a>
+                <a href="aboutus.html" class="nav-island-link">ABOUT US</a>
+            </div>
+
+            <!-- Action (Right) -->
+            <div class="pointer-events-auto flex items-center gap-4">
+                <a href="Membership.html"
+                    class="hidden md:flex group relative overflow-hidden bg-white text-black font-bold uppercase tracking-wider text-xs px-8 py-4 rounded-full hover:bg-boost-accent hover:text-white transition-all duration-300">
+                    <span class="relative z-10">Start Trial</span>
+                </a>
+
+                <!-- Mobile Menu Toggle -->
+                <button id="mobile-menu-btn"
+                    class="pointer-events-auto lg:hidden bg-white/10 backdrop-blur-md border border-white/10 text-white w-12 h-12 rounded-full flex items-center justify-center hover:bg-boost-accent transition-colors">
+                    <i class="fa-solid fa-bars-staggered"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="relative pt-40 pb-20 px-6 min-h-[60vh] flex items-center">
+        <div class="max-w-screen-xl mx-auto w-full">
+            <div class="flex items-center gap-4 mb-6 opacity-0 animate-fade-in">
+                <span class="w-12 h-[2px] bg-boost-accent"></span>
+                <span class="text-boost-accent font-bold tracking-widest text-xs uppercase">Est. 2024</span>
+            </div>
+            <h1
+                class="font-display font-bold text-6xl md:text-9xl text-white uppercase leading-[0.8] mb-12 opacity-0 animate-fade-in delay-100">
+                The <br> <span class="text-transparent" style="-webkit-text-stroke: 2px white;">Origin</span>
+            </h1>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 opacity-0 animate-fade-in delay-200">
+                <div class="text-xl md:text-2xl text-white font-light leading-relaxed">
+                    "We didn't set out to build a gym. We set out to build a cathedral for the human body."
+                </div>
+                <div class="text-gray-400 text-sm leading-relaxed border-l border-white/10 pl-6">
+                    Boost was forged in the fire of necessity. In a world of mediocrity and quick fixes, we saw a need
+                    for a space that demanded excellence. A space where science meets suffering, and where the only
+                    currency is sweat.
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Manifesto Section -->
+    <section class="py-20 md:py-32 border-t border-white/5 relative overflow-hidden">
+        <div
+            class="absolute top-0 right-0 w-[500px] h-[500px] bg-boost-accent/5 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/3">
+        </div>
+        <div class="max-w-screen-xl mx-auto px-6 relative z-10">
+            <h2 class="text-xs font-bold text-gray-500 uppercase tracking-[0.2em] mb-12">The Manifesto</h2>
+            <div class="manifesto-text font-display text-white uppercase opacity-80">
+                <span class="gsap-reveal block">We believe in</span>
+                <span class="gsap-reveal block text-boost-accent">precision over power.</span>
+                <span class="gsap-reveal block">We believe that</span>
+                <span class="gsap-reveal block text-gray-500">pain is data.</span>
+                <span class="gsap-reveal block">We are not</span>
+                <span class="gsap-reveal block text-transparent"
+                    style="-webkit-text-stroke: 1px white;">hobbyists.</span>
+                <span class="gsap-reveal block">We are</span>
+                <span class="gsap-reveal block text-white">architects.</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Timeline Section -->
+    <section class="py-20 md:py-40 bg-boost-charcoal relative">
+        <div class="max-w-screen-lg mx-auto px-6 relative">
+            <div class="timeline-line"></div>
+
+            <!-- 2020 -->
+            <div class="relative grid grid-cols-1 md:grid-cols-2 gap-8 mb-24 items-center gsap-reveal">
+                <div class="md:text-right order-2 md:order-1">
+                    <h3 class="text-6xl font-display font-bold text-white/10">2020</h3>
+                    <h4 class="text-xl font-bold text-white mb-2">The Concept</h4>
+                    <p class="text-gray-400 text-sm">Design phase initiated. Blueprinting the ultimate training
+                        environment in a Brooklyn warehouse.</p>
+                </div>
+                <div
+                    class="hidden md:flex justify-center order-1 md:order-2 absolute left-1/2 transform -translate-x-1/2">
+                    <div
+                        class="w-4 h-4 bg-boost-accent rounded-full border-4 border-boost-charcoal shadow-[0_0_20px_rgba(79,70,229,0.5)]">
+                    </div>
+                </div>
+                <div class="md:pl-12 order-3 md:order-3">
+                    <!-- Spacer or Image could go here -->
+                </div>
+            </div>
+
+            <!-- 2021 -->
+            <div class="relative grid grid-cols-1 md:grid-cols-2 gap-8 mb-24 items-center gsap-reveal">
+                <div class="md:text-right order-2 md:order-1">
+                    <!-- Spacer -->
+                </div>
+                <div class="hidden md:flex justify-center absolute left-1/2 transform -translate-x-1/2">
+                    <div class="w-4 h-4 bg-white rounded-full border-4 border-boost-charcoal"></div>
+                </div>
+                <div class="md:pl-12 order-1 md:order-2">
+                    <h3 class="text-6xl font-display font-bold text-white/10">2021</h3>
+                    <h4 class="text-xl font-bold text-white mb-2">Ground Zero</h4>
+                    <p class="text-gray-400 text-sm">First flagship location opens in NYC. 500 founding members join the
+                        movement.</p>
+                </div>
+            </div>
+
+            <!-- 2024 -->
+            <div class="relative grid grid-cols-1 md:grid-cols-2 gap-8 items-center gsap-reveal">
+                <div class="md:text-right order-2 md:order-1">
+                    <h3 class="text-6xl font-display font-bold text-white/10">2024</h3>
+                    <h4 class="text-xl font-bold text-white mb-2">Global Expansion</h4>
+                    <p class="text-gray-400 text-sm">London and Tokyo locations launched. The Boost protocol goes
+                        international.</p>
+                </div>
+                <div
+                    class="hidden md:flex justify-center order-1 md:order-2 absolute left-1/2 transform -translate-x-1/2">
+                    <div class="w-4 h-4 bg-white rounded-full border-4 border-boost-charcoal"></div>
+                </div>
+                <div class="md:pl-12 order-3 md:order-3"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Team Section -->
+    <section class="py-20 md:py-40 px-6">
+        <div class="max-w-screen-xl mx-auto">
+            <h2 class="text-4xl md:text-6xl font-display font-bold text-white uppercase mb-16 text-center">Command</h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Founder 1 -->
+                <div class="spotlight-card p-0 group">
+                    <div class="relative h-[400px] overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?q=80&w=1780&auto=format&fit=crop"
+                            class="w-full h-full object-cover grayscale group-hover:scale-105 transition-transform duration-700"
+                            alt="Founder">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent"></div>
+                        <div class="absolute bottom-6 left-6">
+                            <h3 class="text-2xl font-display font-bold text-white">Julian Cross</h3>
+                            <p class="text-boost-accent text-xs font-bold uppercase tracking-widest">Founder / CEO</p>
+                        </div>
+                    </div>
+                    <div class="p-8 bg-boost-charcoal border-t border-white/5">
+                        <p class="text-gray-400 text-sm leading-relaxed">
+                            Former Olympian and biophysics researcher. Julian built Boost to bridge the gap between
+                            laboratory sports science and the gym floor.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Founder 2 -->
+                <div class="spotlight-card p-0 group">
+                    <div class="relative h-[400px] overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=1961&auto=format&fit=crop"
+                            class="w-full h-full object-cover grayscale group-hover:scale-105 transition-transform duration-700"
+                            alt="Founder">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent"></div>
+                        <div class="absolute bottom-6 left-6">
+                            <h3 class="text-2xl font-display font-bold text-white">Elena Vokov</h3>
+                            <p class="text-boost-accent text-xs font-bold uppercase tracking-widest">Head of Performance
+                            </p>
+                        </div>
+                    </div>
+                    <div class="p-8 bg-boost-charcoal border-t border-white/5">
+                        <p class="text-gray-400 text-sm leading-relaxed">
+                            Renowned strength coach specializing in neurological adaptation. Elena designs the protocols
+                            that define the Boost experience.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats / Tech Specs -->
+    <section class="py-20 border-y border-white/5 bg-boost-charcoal">
+        <div class="max-w-screen-xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+            <div class="gsap-reveal">
+                <div class="text-4xl font-mono font-bold text-white mb-2">50<span class="text-boost-accent">k</span>
+                </div>
+                <div class="text-[10px] text-gray-500 uppercase tracking-widest">Sq Ft Facility</div>
+            </div>
+            <div class="gsap-reveal" style="transition-delay: 0.1s">
+                <div class="text-4xl font-mono font-bold text-white mb-2">200<span class="text-boost-accent">+</span>
+                </div>
+                <div class="text-[10px] text-gray-500 uppercase tracking-widest">Eleiko Stations</div>
+            </div>
+            <div class="gsap-reveal" style="transition-delay: 0.2s">
+                <div class="text-4xl font-mono font-bold text-white mb-2">4<span class="text-boost-accent">°C</span>
+                </div>
+                <div class="text-[10px] text-gray-500 uppercase tracking-widest">Cold Plunges</div>
+            </div>
+            <div class="gsap-reveal" style="transition-delay: 0.3s">
+                <div class="text-4xl font-mono font-bold text-white mb-2">100<span class="text-boost-accent">%</span>
+                </div>
+                <div class="text-[10px] text-gray-500 uppercase tracking-widest">Carbon Neutral</div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-black pt-20 md:pt-32 pb-12 border-t border-white/5 overflow-hidden">
+        <div class="max-w-screen-2xl mx-auto px-6">
+            <div class="flex flex-col md:flex-row justify-between items-start mb-10 md:mb-20 gap-10">
+                <div>
+                    <h2
+                        class="text-6xl md:text-[12rem] leading-none font-display font-bold text-white opacity-10 select-none md:-ml-4">
+                        BOOST</h2>
+                </div>
+                <div class="flex flex-col md:flex-row gap-10 md:gap-20 md:pt-10">
+                    <div>
+                        <h4 class="text-white font-bold uppercase tracking-widest text-xs mb-6 md:mb-8">Location</h4>
+                        <p class="text-gray-500 text-sm leading-relaxed">
+                            100 Iron Street<br>
+                            Industrial District<br>
+                            Sector 4
+                        </p>
+                    </div>
+                    <div>
+                        <h4 class="text-white font-bold uppercase tracking-widest text-xs mb-6 md:mb-8">Social</h4>
+                        <ul class="space-y-4 text-gray-500 text-sm">
+                            <li><a href="#" class="hover:text-white transition-colors">Instagram</a></li>
+                            <li><a href="#" class="hover:text-white transition-colors">Twitter</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div
+                class="flex flex-col md:flex-row justify-between items-center text-[10px] text-gray-600 uppercase tracking-widest border-t border-white/5 pt-8 gap-4 md:gap-0">
+                <p>&copy; 2024 Boost Performance Inc.</p>
+                <div class="text-center md:text-right">
+                    <p>Designed for Greatness</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script>
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Intro Animation
+        gsap.to(".animate-fade-in", {
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            stagger: 0.15,
+            ease: "power2.out"
+        });
+
+        // Text Reveals
+        gsap.utils.toArray('.gsap-reveal').forEach(elem => {
+            gsap.to(elem, {
+                scrollTrigger: {
+                    trigger: elem,
+                    start: "top 85%",
+                },
+                opacity: 1,
+                y: 0,
+                duration: 1,
+                ease: "power3.out"
+            });
+        });
+
+        // Mouse Spotlight Effect
+        if (window.innerWidth > 768) {
+            const cards = document.querySelectorAll('.spotlight-card');
+
+            // Cursor Glow
+            const glow = document.getElementById('cursor-glow');
+            window.addEventListener('mousemove', (e) => {
+                gsap.to(glow, {
+                    x: e.clientX - 300,
+                    y: e.clientY - 300,
+                    duration: 0.6,
+                    opacity: 0.4,
+                    ease: "power2.out"
+                });
+            });
+
+            document.addEventListener('mousemove', e => {
+                for (const card of cards) {
+                    const rect = card.getBoundingClientRect(),
+                        x = e.clientX - rect.left,
+                        y = e.clientY - rect.top;
+
+                    card.style.setProperty("--x", `${x}px`);
+                    card.style.setProperty("--y", `${y}px`);
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>

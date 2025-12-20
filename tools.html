@@ -1,0 +1,1048 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>BOOST | System Calibration</title>
+    <meta name="description" content="Boost Gym Tools - Calibrate your performance metrics.">
+    <meta name="theme-color" content="#030303">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&family=Syncopate:wght@400;700&family=JetBrains+Mono:wght@400;700&display=swap"
+        rel="stylesheet">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        boost: {
+                            black: '#030303',
+                            charcoal: '#0F0F0F',
+                            border: '#1F1F1F',
+                            accent: '#4F46E5',
+                            accentBright: '#818CF8',
+                            text: '#EDEDED',
+                            muted: '#888888',
+                            success: '#10B981',
+                            warning: '#F59E0B',
+                            danger: '#EF4444'
+                        }
+                    },
+                    fontFamily: {
+                        display: ['Syncopate', 'sans-serif'],
+                        body: ['Manrope', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    backgroundImage: {
+                        'noise': "url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiB2aWV3Qm94PSIwIDAgNTEyIDUxMiI+PGZpbHRlciBpZD0ibm9pc2UiPjxmZVR1cmJ1bGVuY2UgdHlwZT0iZnJhY3RhbE5vaXNlIiBiYXNlRnJlcXVlbmN5PSIwLjY1IiBudW1PY3RhdmVzPSIzIiBzdGl0Y2hUaWxlcz0ic3RpdGNoIi8+PC9maWx0ZXI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsdGVyPSJ1cmwoI25vaXNlKSIgb3BhY2l0eT0iMC4wNSIvPjwvc3ZnPg==')",
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #030303;
+            color: #EDEDED;
+            overflow-x: hidden;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        /* Film Grain Overlay */
+        .grain-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiB2aWV3Qm94PSIwIDAgNTEyIDUxMiI+PGZpbHRlciBpZD0ibm9pc2UiPjxmZVR1cmJ1bGVuY2UgdHlwZT0iZnJhY3RhbE5vaXNlIiBiYXNlRnJlcXVlbmN5PSIwLjY1IiBudW1PY3RhdmVzPSIzIiBzdGl0Y2hUaWxlcz0ic3RpdGNoIi8+PC9maWx0ZXI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsdGVyPSJ1cmwoI25vaXNlKSIgb3BhY2l0eT0iMC4wNSIvPjwvc3ZnPg==');
+            opacity: 0.05;
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        /* Nav Styles */
+        .nav-island {
+            background: rgba(20, 20, 20, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-island-link {
+            position: relative;
+            color: #888;
+            transition: color 0.3s ease;
+        }
+
+        .nav-island-link:hover {
+            color: #fff;
+        }
+
+        .nav-island-link::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 2px;
+            background-color: #4F46E5;
+            transition: width 0.3s ease;
+        }
+
+        .nav-island-link:hover::after {
+            width: 100%;
+        }
+
+        /* Mobile Bottom Nav */
+        .bottom-nav-item {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: #666;
+            transition: all 0.3s ease;
+        }
+
+        .bottom-nav-item.active,
+        .bottom-nav-item:hover {
+            color: #4F46E5;
+        }
+
+        /* Card Styles */
+        .spotlight-card {
+            position: relative;
+            background: rgba(20, 20, 20, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            overflow: hidden;
+            transition: border-color 0.3s, transform 0.3s;
+            /* New Full Screen Properties */
+            min-height: 85vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 3rem;
+        }
+
+        .spotlight-card:hover {
+            border-color: rgba(79, 70, 229, 0.4);
+            /* Removed vertical transform to prevent layout shift on full screen */
+        }
+
+        @media (min-width: 768px) {
+            .spotlight-card::before {
+                content: '';
+                position: absolute;
+                top: var(--y, -50%);
+                left: var(--x, -50%);
+                width: 600px;
+                height: 600px;
+                /* Larger spotlight for larger cards */
+                background: radial-gradient(circle, rgba(79, 70, 229, 0.15), transparent 60%);
+                transform: translate(-50%, -50%);
+                opacity: 0;
+                transition: opacity 0.3s;
+                pointer-events: none;
+                z-index: 1;
+            }
+
+            .spotlight-card:hover::before {
+                opacity: 1;
+            }
+        }
+
+        /* Form Elements */
+        .boost-input {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            padding: 1rem 1.5rem;
+            width: 100%;
+            font-family: 'JetBrains Mono', monospace;
+            transition: all 0.3s ease;
+            appearance: none;
+            font-size: 1rem;
+        }
+
+        .boost-input:focus {
+            outline: none;
+            border-color: #4F46E5;
+            background: rgba(79, 70, 229, 0.05);
+            box-shadow: 0 0 15px rgba(79, 70, 229, 0.1);
+        }
+
+        .boost-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: #888;
+            margin-bottom: 0.75rem;
+            display: block;
+            font-weight: 700;
+        }
+
+        .result-box {
+            background: rgba(79, 70, 229, 0.1);
+            border-left: 2px solid #4F46E5;
+            position: relative;
+            overflow: hidden;
+            padding: 2rem;
+            /* Larger padding for full screen */
+        }
+
+        .result-scan-line {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 2px;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.5);
+            box-shadow: 0 0 10px white;
+            animation: scan 1.5s ease-in-out forwards;
+            opacity: 0;
+        }
+
+        @keyframes scan {
+            0% {
+                left: 0;
+                opacity: 1;
+            }
+
+            100% {
+                left: 100%;
+                opacity: 0;
+            }
+        }
+
+        .gsap-reveal {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        /* Cursor Glow */
+        .cursor-glow {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(79, 70, 229, 0.1), transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9998;
+            mix-blend-mode: screen;
+            opacity: 0;
+        }
+
+        /* Visual Plate Styles */
+        .plate-visual {
+            display: inline-block;
+            height: 100%;
+            border-radius: 4px;
+            margin-right: 2px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            position: relative;
+            background: #222;
+        }
+
+        .plate-visual span {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-90deg);
+            font-size: 8px;
+            color: #aaa;
+            font-weight: bold;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .plate-red {
+            background-color: #7f1d1d;
+            height: 60px;
+            width: 14px;
+        }
+
+        .plate-blue {
+            background-color: #1e3a8a;
+            height: 60px;
+            width: 14px;
+        }
+
+        .plate-yellow {
+            background-color: #713f12;
+            height: 55px;
+            width: 12px;
+        }
+
+        .plate-green {
+            background-color: #14532d;
+            height: 45px;
+            width: 10px;
+        }
+
+        .plate-white {
+            background-color: #eee;
+            height: 40px;
+            width: 8px;
+        }
+
+        .plate-black {
+            background-color: #111;
+            height: 35px;
+            width: 8px;
+        }
+
+        /* Content Centering Wrapper */
+        .tool-content-wrapper {
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+
+<body class="font-body antialiased selection:bg-boost-accent selection:text-white pb-24 md:pb-0">
+
+    <div class="cursor-glow" id="cursor-glow"></div>
+    <div class="grain-overlay"></div>
+
+    <!-- Navigation -->
+
+    <nav class="fixed top-0 w-full z-50 pt-6 px-6 md:px-12 pointer-events-none" id="navbar">
+        <div class="max-w-[1920px] mx-auto flex justify-between items-start">
+
+            <!-- Logo (Left) -->
+            <a href="index.html" class="pointer-events-auto flex items-center gap-3 group">
+                <div class="w-10 h-10 md:w-12 md:h-12 bg-white text-black flex items-center justify-center font-bold text-xl clip-slant hover:bg-boost-accent hover:text-white transition-colors duration-300"
+                    style="clip-path: polygon(15% 0, 100% 0, 85% 100%, 0% 100%);">
+                    <i class="fa-solid fa-bolt"></i>
+                </div>
+                <div class="hidden md:flex flex-col bg-black/50 backdrop-blur-sm p-2 rounded-r-lg">
+                    <span class="font-display font-bold text-xl tracking-widest text-white leading-none">BOOST</span>
+                    <span class="text-[9px] text-gray-400 uppercase tracking-[0.3em]">Performance</span>
+                </div>
+            </a>
+
+            <!-- Menu Island (Center - Desktop Only) -->
+            <div
+                class="hidden lg:flex pointer-events-auto nav-island rounded-full px-10 py-4 gap-12 font-medium text-xs tracking-[0.2em] items-center mt-1">
+                <a href="index.html" class="nav-island-link">HOME</a>
+                <a href="tools.html" class="nav-island-link">TOOLS</a>
+                <a href="Membership.html" class="nav-island-link">MEMBERSHIP</a>
+                <a href="locartion.html" class="nav-island-link">LOCATIONS</a>
+                <a href="aboutus.html" class="nav-island-link">ABOUT US</a>
+            </div>
+
+            <!-- Action (Right) -->
+            <div class="pointer-events-auto flex items-center gap-4">
+                <a href="Membership.html"
+                    class="hidden md:flex group relative overflow-hidden bg-white text-black font-bold uppercase tracking-wider text-xs px-8 py-4 rounded-full hover:bg-boost-accent hover:text-white transition-all duration-300">
+                    <span class="relative z-10">Start Trial</span>
+                </a>
+
+                <!-- Mobile Menu Toggle -->
+                <button id="mobile-menu-btn"
+                    class="pointer-events-auto lg:hidden bg-white/10 backdrop-blur-md border border-white/10 text-white w-12 h-12 rounded-full flex items-center justify-center hover:bg-boost-accent transition-colors">
+                    <i class="fa-solid fa-bars-staggered"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header Section -->
+    <header class="relative pt-40 pb-20 px-6">
+        <div class="max-w-screen-xl mx-auto">
+            <div class="flex flex-col md:flex-row justify-between items-end gap-8">
+                <div>
+                    <div class="flex items-center gap-4 mb-4 opacity-0 animate-fade-in">
+                        <span class="w-8 h-[2px] bg-boost-accent"></span>
+                        <span class="text-boost-accent font-bold tracking-widest text-xs uppercase">System
+                            Metrics</span>
+                    </div>
+                    <h1
+                        class="text-4xl md:text-7xl font-display font-bold text-white uppercase leading-none opacity-0 animate-fade-in delay-100">
+                        Calibrate <br> <span
+                            class="text-transparent bg-clip-text bg-gradient-to-r from-gray-500 to-white">Your
+                            Engine</span>
+                    </h1>
+                </div>
+                <p
+                    class="text-gray-400 max-w-sm text-sm md:text-base leading-relaxed text-right md:text-left opacity-0 animate-fade-in delay-200">
+                    Data drives performance. Use our architectural tools to calculate your baseline and project your
+                    limits.
+                </p>
+            </div>
+        </div>
+    </header>
+
+    <!-- Tools Stack -->
+    <section class="pb-40 px-6">
+        <!-- Changed from Grid to Single Column Flex Stack -->
+        <div class="max-w-screen-xl mx-auto flex flex-col gap-24" id="tools-container">
+
+            <!-- Tool 1: 1RM Calculator -->
+            <div class="spotlight-card gsap-reveal">
+                <div class="tool-content-wrapper grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                    <!-- Left: Form -->
+                    <div class="order-2 lg:order-1">
+                        <div class="flex justify-between items-start mb-8">
+                            <h3 class="font-display font-bold text-3xl text-white">1RM <span
+                                    class="text-boost-accent">Estimator</span></h3>
+                            <i class="fa-solid fa-dumbbell text-gray-600 text-3xl"></i>
+                        </div>
+                        <p class="text-gray-400 text-sm mb-8 leading-relaxed">
+                            Calculate your theoretical one-repetition maximum based on sub-maximal lift data. Essential
+                            for percentage-based programming.
+                        </p>
+
+                        <form id="orm-form" class="space-y-6">
+                            <div>
+                                <label class="boost-label">Weight Lifted (kg)</label>
+                                <input type="number" id="orm-weight" class="boost-input" placeholder="e.g. 100">
+                            </div>
+                            <div>
+                                <label class="boost-label">Repetitions</label>
+                                <input type="number" id="orm-reps" class="boost-input" placeholder="e.g. 5">
+                            </div>
+                            <button type="submit"
+                                class="w-full py-5 bg-white/5 hover:bg-boost-accent text-white font-bold uppercase tracking-widest text-sm transition-colors border border-white/10 group">
+                                Calculate Max <i
+                                    class="fa-solid fa-chevron-right ml-2 text-xs opacity-0 group-hover:opacity-100 transition-opacity"></i>
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Right: Result -->
+                    <div class="order-1 lg:order-2 h-full flex flex-col justify-center">
+                        <div id="orm-result" class="hidden opacity-0 transition-opacity duration-500">
+                            <div class="result-box mb-8">
+                                <div class="result-scan-line"></div>
+                                <span class="boost-label text-boost-accent">Estimated One Rep Max</span>
+                                <div class="text-6xl font-mono font-bold text-white"><span id="orm-value">0</span> <span
+                                        class="text-xl text-gray-400 font-sans">kg</span></div>
+                            </div>
+                            <div class="grid grid-cols-1 gap-4 text-center">
+                                <div
+                                    class="flex justify-between items-center bg-black/40 p-4 rounded border border-white/5">
+                                    <div class="text-xs text-gray-500 uppercase font-bold tracking-widest">Training Max
+                                        (90%)</div>
+                                    <div class="text-xl font-mono font-bold text-white" id="orm-90">0</div>
+                                </div>
+                                <div
+                                    class="flex justify-between items-center bg-black/40 p-4 rounded border border-white/5">
+                                    <div class="text-xs text-gray-500 uppercase font-bold tracking-widest">Hypertrophy
+                                        (70%)</div>
+                                    <div class="text-xl font-mono font-bold text-white" id="orm-70">0</div>
+                                </div>
+                                <div
+                                    class="flex justify-between items-center bg-black/40 p-4 rounded border border-white/5">
+                                    <div class="text-xs text-gray-500 uppercase font-bold tracking-widest">Speed Work
+                                        (50%)</div>
+                                    <div class="text-xl font-mono font-bold text-white" id="orm-50">0</div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Placeholder -->
+                        <div id="orm-placeholder" class="text-center opacity-30">
+                            <i class="fa-solid fa-chart-line text-9xl text-white/10"></i>
+                            <p class="mt-4 text-xs uppercase tracking-widest">Awaiting Input Data</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tool 2: BMI / Composition -->
+            <div class="spotlight-card gsap-reveal">
+                <div class="tool-content-wrapper grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                    <!-- Left: Form -->
+                    <div>
+                        <div class="flex justify-between items-start mb-8">
+                            <h3 class="font-display font-bold text-3xl text-white">Body <span
+                                    class="text-boost-accent">Index</span></h3>
+                            <i class="fa-solid fa-weight-scale text-gray-600 text-3xl"></i>
+                        </div>
+                        <p class="text-gray-400 text-sm mb-8 leading-relaxed">
+                            A general indicator of body mass relative to height. Used as a baseline metric for general
+                            population health standards.
+                        </p>
+
+                        <form id="bmi-form" class="space-y-6">
+                            <div>
+                                <label class="boost-label">Height (cm)</label>
+                                <input type="number" id="bmi-height" class="boost-input" placeholder="e.g. 180">
+                            </div>
+                            <div>
+                                <label class="boost-label">Weight (kg)</label>
+                                <input type="number" id="bmi-weight" class="boost-input" placeholder="e.g. 80">
+                            </div>
+                            <button type="submit"
+                                class="w-full py-5 bg-white/5 hover:bg-boost-accent text-white font-bold uppercase tracking-widest text-sm transition-colors border border-white/10 group">
+                                Analyze Composition <i
+                                    class="fa-solid fa-chevron-right ml-2 text-xs opacity-0 group-hover:opacity-100 transition-opacity"></i>
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Right: Result -->
+                    <div class="h-full flex flex-col justify-center">
+                        <div id="bmi-result" class="hidden opacity-0 transition-opacity duration-500">
+                            <div class="result-box">
+                                <div class="result-scan-line"></div>
+                                <span class="boost-label text-boost-accent">BMI Score</span>
+                                <div class="flex items-baseline gap-4 mt-2">
+                                    <div class="text-6xl font-mono font-bold text-white" id="bmi-value">0.0</div>
+                                    <div class="text-sm font-bold uppercase px-3 py-1 bg-white/10 rounded text-gray-300 tracking-wider"
+                                        id="bmi-category">Normal</div>
+                                </div>
+                            </div>
+                            <div class="mt-8 border-l border-white/10 pl-6">
+                                <p class="text-xs text-gray-500 leading-relaxed font-mono">
+                                    // SYSTEM WARNING: <br>
+                                    THIS METRIC DOES NOT ACCOUNT FOR MUSCLE MASS DENSITY. HIGH PERFORMANCE ATHLETES MAY
+                                    REGISTER FALSE POSITIVES FOR OVERWEIGHT STATUS.
+                                </p>
+                            </div>
+                        </div>
+                        <div id="bmi-placeholder" class="text-center opacity-30">
+                            <i class="fa-solid fa-user-scan text-9xl text-white/10"></i>
+                            <p class="mt-4 text-xs uppercase tracking-widest">Ready to Scan</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tool 3: TDEE / Macros -->
+            <div class="spotlight-card gsap-reveal">
+                <div class="tool-content-wrapper grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                    <!-- Left: Form -->
+                    <div>
+                        <div class="flex justify-between items-start mb-8">
+                            <h3 class="font-display font-bold text-3xl text-white">Fuel <span
+                                    class="text-boost-accent">Logic</span></h3>
+                            <i class="fa-solid fa-fire text-gray-600 text-3xl"></i>
+                        </div>
+                        <p class="text-gray-400 text-sm mb-8 leading-relaxed">
+                            Determine your Total Daily Energy Expenditure (TDEE) and optimal macronutrient split for
+                            muscle synthesis.
+                        </p>
+
+                        <form id="tdee-form" class="space-y-4">
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="boost-label">Age</label>
+                                    <input type="number" id="tdee-age" class="boost-input" placeholder="25">
+                                </div>
+                                <div>
+                                    <label class="boost-label">Gender</label>
+                                    <div class="relative">
+                                        <select id="tdee-gender" class="boost-input appearance-none">
+                                            <option value="male">Male</option>
+                                            <option value="female">Female</option>
+                                        </select>
+                                        <i
+                                            class="fa-solid fa-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 text-xs pointer-events-none"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="boost-label">Activity Level</label>
+                                <div class="relative">
+                                    <select id="tdee-activity" class="boost-input appearance-none">
+                                        <option value="1.2">Sedentary (Office Job)</option>
+                                        <option value="1.375">Light (1-2 days/wk)</option>
+                                        <option value="1.55">Moderate (3-5 days/wk)</option>
+                                        <option value="1.725">Heavy (6-7 days/wk)</option>
+                                        <option value="1.9">Athlete (2x per day)</option>
+                                    </select>
+                                    <i
+                                        class="fa-solid fa-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 text-xs pointer-events-none"></i>
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="boost-label">Weight (kg)</label>
+                                    <input type="number" id="tdee-weight" class="boost-input" placeholder="80">
+                                </div>
+                                <div>
+                                    <label class="boost-label">Height (cm)</label>
+                                    <input type="number" id="tdee-height" class="boost-input" placeholder="180">
+                                </div>
+                            </div>
+
+                            <button type="submit"
+                                class="w-full py-5 bg-white/5 hover:bg-boost-accent text-white font-bold uppercase tracking-widest text-sm transition-colors border border-white/10 group">
+                                Calculate Needs <i
+                                    class="fa-solid fa-chevron-right ml-2 text-xs opacity-0 group-hover:opacity-100 transition-opacity"></i>
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Right: Result -->
+                    <div class="h-full flex flex-col justify-center">
+                        <div id="tdee-result" class="hidden opacity-0 transition-opacity duration-500">
+                            <div class="result-box mb-8">
+                                <div class="result-scan-line"></div>
+                                <span class="boost-label text-boost-accent">Daily Maintenance</span>
+                                <div class="text-6xl font-mono font-bold text-white"><span id="tdee-value">0</span>
+                                    <span class="text-xl text-gray-400 font-sans">kcal</span>
+                                </div>
+                            </div>
+                            <div class="space-y-6 font-mono text-sm">
+                                <div class="space-y-2">
+                                    <div class="flex justify-between">
+                                        <span class="text-gray-400 font-bold">PROTEIN (High)</span>
+                                        <span class="font-bold text-white text-lg" id="macro-p">0g</span>
+                                    </div>
+                                    <div class="w-full h-2 bg-white/10 rounded overflow-hidden">
+                                        <div class="h-full bg-blue-500 w-[35%]"></div>
+                                    </div>
+                                </div>
+                                <div class="space-y-2">
+                                    <div class="flex justify-between">
+                                        <span class="text-gray-400 font-bold">CARBS (Moderate)</span>
+                                        <span class="font-bold text-white text-lg" id="macro-c">0g</span>
+                                    </div>
+                                    <div class="w-full h-2 bg-white/10 rounded overflow-hidden">
+                                        <div class="h-full bg-green-500 w-[40%]"></div>
+                                    </div>
+                                </div>
+                                <div class="space-y-2">
+                                    <div class="flex justify-between">
+                                        <span class="text-gray-400 font-bold">FATS (Low)</span>
+                                        <span class="font-bold text-white text-lg" id="macro-f">0g</span>
+                                    </div>
+                                    <div class="w-full h-2 bg-white/10 rounded overflow-hidden">
+                                        <div class="h-full bg-yellow-500 w-[25%]"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="tdee-placeholder" class="text-center opacity-30">
+                            <i class="fa-solid fa-utensils text-9xl text-white/10"></i>
+                            <p class="mt-4 text-xs uppercase tracking-widest">Awaiting Biometrics</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- NEW TOOL 4: Heart Rate Zones -->
+            <div class="spotlight-card gsap-reveal">
+                <div class="tool-content-wrapper grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                    <!-- Left: Form -->
+                    <div>
+                        <div class="flex justify-between items-start mb-8">
+                            <h3 class="font-display font-bold text-3xl text-white">Engine <span
+                                    class="text-boost-accent">Zones</span></h3>
+                            <i class="fa-solid fa-heart-pulse text-gray-600 text-3xl"></i>
+                        </div>
+                        <p class="text-gray-400 text-sm mb-8 leading-relaxed">
+                            Define your cardiovascular training zones based on age-predicted maximum heart rate.
+                            Critical for conditioning.
+                        </p>
+
+                        <form id="hr-form" class="space-y-6">
+                            <div>
+                                <label class="boost-label">Age</label>
+                                <input type="number" id="hr-age" class="boost-input" placeholder="e.g. 28">
+                            </div>
+                            <button type="submit"
+                                class="w-full py-5 bg-white/5 hover:bg-boost-accent text-white font-bold uppercase tracking-widest text-sm transition-colors border border-white/10 group">
+                                Calculate Zones <i
+                                    class="fa-solid fa-chevron-right ml-2 text-xs opacity-0 group-hover:opacity-100 transition-opacity"></i>
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Right: Result -->
+                    <div class="h-full flex flex-col justify-center">
+                        <div id="hr-result" class="hidden opacity-0 transition-opacity duration-500">
+                            <div class="result-box mb-8">
+                                <div class="result-scan-line"></div>
+                                <span class="boost-label text-boost-accent">Max Heart Rate</span>
+                                <div class="text-6xl font-mono font-bold text-white"><span id="hr-max">0</span> <span
+                                        class="text-xl text-gray-400 font-sans">BPM</span></div>
+                            </div>
+
+                            <!-- Zone Visualization -->
+                            <div class="flex h-3 w-full gap-1 mb-6">
+                                <div class="h-full bg-gray-500 flex-1 rounded-sm opacity-50"></div>
+                                <div class="h-full bg-blue-500 flex-1 rounded-sm opacity-50"></div>
+                                <div class="h-full bg-green-500 flex-1 rounded-sm opacity-50"></div>
+                                <div class="h-full bg-yellow-500 flex-1 rounded-sm opacity-50"></div>
+                                <div class="h-full bg-red-600 flex-1 rounded-sm opacity-50"></div>
+                            </div>
+
+                            <div class="space-y-3 font-mono text-sm">
+                                <div
+                                    class="flex justify-between items-center p-3 bg-white/5 rounded border border-white/5">
+                                    <span class="text-red-500 font-bold">ZONE 5 (VO2 Max)</span>
+                                    <span class="text-white" id="zone-5">0-0</span>
+                                </div>
+                                <div
+                                    class="flex justify-between items-center p-3 bg-white/5 rounded border border-white/5">
+                                    <span class="text-yellow-500 font-bold">ZONE 4 (Anaerobic)</span>
+                                    <span class="text-white" id="zone-4">0-0</span>
+                                </div>
+                                <div
+                                    class="flex justify-between items-center p-3 bg-white/5 rounded border border-white/5">
+                                    <span class="text-green-500 font-bold">ZONE 3 (Aerobic)</span>
+                                    <span class="text-white" id="zone-3">0-0</span>
+                                </div>
+                                <div
+                                    class="flex justify-between items-center p-3 bg-white/5 rounded border border-white/5">
+                                    <span class="text-blue-500 font-bold">ZONE 2 (Endurance)</span>
+                                    <span class="text-white" id="zone-2">0-0</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="hr-placeholder" class="text-center opacity-30">
+                            <i class="fa-solid fa-heart-circle-bolt text-9xl text-white/10"></i>
+                            <p class="mt-4 text-xs uppercase tracking-widest">Awaiting Age Input</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tool 5: Barbell Plate Loader -->
+            <div class="spotlight-card gsap-reveal">
+                <div class="tool-content-wrapper grid grid-cols-1 gap-12">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                        <div>
+                            <div class="flex justify-between items-start mb-8">
+                                <h3 class="font-display font-bold text-3xl text-white">Barbell <span
+                                        class="text-boost-accent">Logic</span></h3>
+                                <i class="fa-solid fa-layer-group text-gray-600 text-3xl"></i>
+                            </div>
+                            <p class="text-gray-400 text-sm mb-8 leading-relaxed">
+                                Precise plate loading instructions for standard Olympic bars. Visualize your load-out.
+                            </p>
+
+                            <form id="plate-form" class="space-y-6">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div>
+                                        <label class="boost-label">Target Weight (kg)</label>
+                                        <input type="number" id="plate-weight" class="boost-input"
+                                            placeholder="e.g. 102.5">
+                                    </div>
+                                    <div>
+                                        <label class="boost-label">Bar Weight (kg)</label>
+                                        <select id="plate-bar" class="boost-input">
+                                            <option value="20">Standard Olympic (20kg)</option>
+                                            <option value="15">Women's Bar (15kg)</option>
+                                            <option value="10">Training Bar (10kg)</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <button type="submit"
+                                    class="w-full py-5 bg-white/5 hover:bg-boost-accent text-white font-bold uppercase tracking-widest text-sm transition-colors border border-white/10 group">
+                                    Load Bar <i
+                                        class="fa-solid fa-chevron-right ml-2 text-xs opacity-0 group-hover:opacity-100 transition-opacity"></i>
+                                </button>
+                            </form>
+                        </div>
+
+                        <div class="h-full flex flex-col justify-center">
+                            <div id="plate-result" class="hidden opacity-0 transition-opacity duration-500">
+                                <div class="result-box mb-6">
+                                    <div class="result-scan-line"></div>
+                                    <span class="boost-label text-boost-accent">Plate Breakdown (Per Side)</span>
+                                    <div class="text-xl font-mono text-gray-300 mt-2" id="plate-text-list">...</div>
+                                </div>
+                            </div>
+                            <div id="plate-placeholder" class="text-center opacity-30">
+                                <i class="fa-solid fa-weight-hanging text-9xl text-white/10"></i>
+                                <p class="mt-4 text-xs uppercase tracking-widest">Awaiting Load</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Full Width Visual Representation -->
+                    <div id="visual-plate-container" class="hidden opacity-0 transition-opacity duration-500">
+                        <div
+                            class="relative h-40 bg-black/40 border border-white/10 rounded-lg flex items-center px-8 overflow-hidden">
+                            <!-- The Bar -->
+                            <div
+                                class="absolute left-0 top-1/2 -translate-y-1/2 w-full h-6 bg-gray-600 rounded-full z-0">
+                            </div>
+                            <!-- The Collar -->
+                            <div class="relative z-10 w-6 h-24 bg-gray-400 border-r border-gray-500 shadow-xl mr-2">
+                            </div>
+
+                            <!-- Plates Container -->
+                            <div id="visual-plates" class="relative z-10 flex items-center h-full">
+                                <!-- Plates injected via JS -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <footer class="bg-black pt-20 md:pt-32 pb-12 border-t border-white/5 overflow-hidden">
+        <div class="max-w-screen-2xl mx-auto px-6">
+            <div class="flex flex-col md:flex-row justify-between items-start mb-10 md:mb-20 gap-10">
+                <div>
+                    <h2
+                        class="text-6xl md:text-[12rem] leading-none font-display font-bold text-white opacity-10 select-none md:-ml-4">
+                        BOOST</h2>
+                </div>
+                <div class="flex flex-col md:flex-row gap-10 md:gap-20 md:pt-10">
+                    <div>
+                        <h4 class="text-white font-bold uppercase tracking-widest text-xs mb-6 md:mb-8">Location</h4>
+                        <p class="text-gray-500 text-sm leading-relaxed">
+                            100 Iron Street<br>
+                            Industrial District<br>
+                            Sector 4
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div
+                class="flex flex-col md:flex-row justify-between items-center text-[10px] text-gray-600 uppercase tracking-widest border-t border-white/5 pt-8 gap-4 md:gap-0">
+                <p>&copy; 2024 Boost Performance Inc.</p>
+                <div class="text-center md:text-right">
+                    <p>Designed for Greatness</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script>
+        // Intro Animation
+        gsap.to(".animate-fade-in", {
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            stagger: 0.15,
+            ease: "power2.out"
+        });
+
+        // Reveal Animation for Cards
+        gsap.to(".gsap-reveal", {
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            stagger: 0.15,
+            delay: 0.4,
+            ease: "power3.out"
+        });
+
+        // Mouse Spotlight Effect (Desktop Only)
+        if (window.innerWidth > 768) {
+            const cards = document.querySelectorAll('.spotlight-card');
+            const container = document.getElementById('tools-container');
+
+            // Cursor Glow
+            const glow = document.getElementById('cursor-glow');
+            window.addEventListener('mousemove', (e) => {
+                gsap.to(glow, {
+                    x: e.clientX - 300,
+                    y: e.clientY - 300,
+                    duration: 0.6,
+                    opacity: 0.4,
+                    ease: "power2.out"
+                });
+            });
+
+            if (container) {
+                container.onmousemove = e => {
+                    for (const card of cards) {
+                        const rect = card.getBoundingClientRect(),
+                            x = e.clientX - rect.left,
+                            y = e.clientY - rect.top;
+
+                        card.style.setProperty("--x", `${x}px`);
+                        card.style.setProperty("--y", `${y}px`);
+                    }
+                };
+            }
+        }
+
+        function showResult(elementId, placeholderId) {
+            const el = document.getElementById(elementId);
+            const placeholder = document.getElementById(placeholderId);
+
+            if (placeholder) {
+                placeholder.style.display = 'none';
+            }
+
+            el.classList.remove('hidden');
+            void el.offsetWidth; // force reflow
+            el.classList.remove('opacity-0');
+
+            // Re-trigger scan line animation
+            const scanLine = el.querySelector('.result-scan-line');
+            if (scanLine) {
+                scanLine.style.animation = 'none';
+                void scanLine.offsetWidth;
+                scanLine.style.animation = 'scan 1.5s ease-in-out forwards';
+            }
+        }
+
+        // 1RM Calculator Logic
+        document.getElementById('orm-form').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const w = parseFloat(document.getElementById('orm-weight').value);
+            const r = parseFloat(document.getElementById('orm-reps').value);
+            if (w && r) {
+                const oneRM = Math.round(w * (1 + r / 30));
+                document.getElementById('orm-value').innerText = oneRM;
+                document.getElementById('orm-90').innerText = Math.round(oneRM * 0.9);
+                document.getElementById('orm-70').innerText = Math.round(oneRM * 0.7);
+                document.getElementById('orm-50').innerText = Math.round(oneRM * 0.5);
+                showResult('orm-result', 'orm-placeholder');
+            }
+        });
+
+        // BMI Calculator Logic
+        document.getElementById('bmi-form').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const h = parseFloat(document.getElementById('bmi-height').value) / 100;
+            const w = parseFloat(document.getElementById('bmi-weight').value);
+
+            // Sync with other tools
+            if (h) document.getElementById('tdee-height').value = Math.round(h * 100);
+            if (w) {
+                document.getElementById('tdee-weight').value = w;
+                document.getElementById('orm-weight').placeholder = w;
+            }
+
+            if (h && w) {
+                const bmi = (w / (h * h)).toFixed(1);
+                document.getElementById('bmi-value').innerText = bmi;
+
+                let cat = "Normal";
+                let color = "text-gray-300";
+                if (bmi < 18.5) { cat = "Underweight"; color = "text-yellow-400"; }
+                else if (bmi >= 25 && bmi < 29.9) { cat = "Overweight"; color = "text-yellow-400"; }
+                else if (bmi >= 30) { cat = "Obese"; color = "text-boost-danger"; }
+
+                const catEl = document.getElementById('bmi-category');
+                catEl.innerText = cat;
+                catEl.className = `text-sm font-bold uppercase px-3 py-1 bg-white/10 rounded tracking-wider ${color}`;
+                showResult('bmi-result', 'bmi-placeholder');
+            }
+        });
+
+        // TDEE Calculator Logic
+        document.getElementById('tdee-form').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const age = parseFloat(document.getElementById('tdee-age').value);
+            const gender = document.getElementById('tdee-gender').value;
+            const activity = parseFloat(document.getElementById('tdee-activity').value);
+            const w = parseFloat(document.getElementById('tdee-weight').value);
+            const h = parseFloat(document.getElementById('tdee-height').value);
+
+            if (age && w && h) {
+                let bmr = (10 * w) + (6.25 * h) - (5 * age);
+                bmr += (gender === 'male') ? 5 : -161;
+
+                const tdee = Math.round(bmr * activity);
+                document.getElementById('tdee-value').innerText = tdee;
+
+                const protein = Math.round(w * 2.2);
+                const fat = Math.round(w * 0.9);
+                const carbCals = tdee - ((protein * 4) + (fat * 9));
+                const carbs = Math.max(0, Math.round(carbCals / 4));
+
+                document.getElementById('macro-p').innerText = protein + "g";
+                document.getElementById('macro-c').innerText = carbs + "g";
+                document.getElementById('macro-f').innerText = fat + "g";
+                showResult('tdee-result', 'tdee-placeholder');
+            }
+        });
+
+        // Heart Rate Calculator Logic
+        document.getElementById('hr-form').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const age = parseFloat(document.getElementById('hr-age').value);
+            if (age) {
+                const maxHr = 220 - age;
+                document.getElementById('hr-max').innerText = maxHr;
+
+                // Calculate Zones
+                document.getElementById('zone-5').innerText = `${Math.round(maxHr * 0.9)} - ${maxHr}`;
+                document.getElementById('zone-4').innerText = `${Math.round(maxHr * 0.8)} - ${Math.round(maxHr * 0.9)}`;
+                document.getElementById('zone-3').innerText = `${Math.round(maxHr * 0.7)} - ${Math.round(maxHr * 0.8)}`;
+                document.getElementById('zone-2').innerText = `${Math.round(maxHr * 0.6)} - ${Math.round(maxHr * 0.7)}`;
+                showResult('hr-result', 'hr-placeholder');
+            }
+        });
+
+        // Plate Loader Logic
+        document.getElementById('plate-form').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const target = parseFloat(document.getElementById('plate-weight').value);
+            const bar = parseFloat(document.getElementById('plate-bar').value);
+
+            if (target && bar && target > bar) {
+                let remaining = (target - bar) / 2;
+                const plates = [25, 20, 15, 10, 5, 2.5, 1.25];
+                const needed = [];
+
+                plates.forEach(p => {
+                    while (remaining >= p) {
+                        needed.push(p);
+                        remaining -= p;
+                    }
+                });
+
+                // Update Text List
+                const countMap = {};
+                needed.forEach(p => { countMap[p] = (countMap[p] || 0) + 1; });
+                const textList = Object.keys(countMap).sort((a, b) => b - a).map(p => `${countMap[p]}x ${p}kg`).join(' | ');
+                document.getElementById('plate-text-list').innerText = textList.length ? textList : "Just the bar!";
+
+                // Update Visuals
+                const visualContainer = document.getElementById('visual-plates');
+                visualContainer.innerHTML = ''; // clear
+
+                needed.forEach(p => {
+                    const div = document.createElement('div');
+                    let colorClass = 'plate-black';
+                    if (p === 25) colorClass = 'plate-red';
+                    if (p === 20) colorClass = 'plate-blue';
+                    if (p === 15) colorClass = 'plate-yellow';
+                    if (p === 10) colorClass = 'plate-green';
+                    if (p === 5) colorClass = 'plate-white';
+                    if (p <= 2.5) colorClass = 'plate-black';
+
+                    div.className = `plate-visual ${colorClass}`;
+                    div.innerHTML = `<span>${p}</span>`;
+
+                    // Simple animation for adding plates
+                    gsap.fromTo(div, { x: -20, opacity: 0 }, { x: 0, opacity: 1, duration: 0.3, ease: 'power2.out' });
+
+                    visualContainer.appendChild(div);
+                });
+
+                showResult('plate-result', 'plate-placeholder');
+
+                // Show visual container
+                const vis = document.getElementById('visual-plate-container');
+                vis.classList.remove('hidden');
+                void vis.offsetWidth;
+                vis.classList.remove('opacity-0');
+            }
+        });
+
+    </script>
+</body>
+
+</html>

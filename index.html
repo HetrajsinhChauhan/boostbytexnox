@@ -352,6 +352,31 @@
         </div>
     </nav>
 
+    <!-- NEW: Mobile Bottom App Navigation -->
+    
+    <div id="mobile-menu"
+        class="fixed inset-0 z-[60] bg-boost-black transform translate-x-full transition-transform duration-500 flex flex-col justify-center items-center">
+        <button id="close-menu-btn"
+            class="absolute top-6 right-6 text-white text-3xl p-4 hover:text-boost-accent transition-colors">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+        <div class="flex flex-col gap-10 text-center font-display text-2xl font-bold uppercase tracking-widest">
+            <a href="index.html" class="mobile-link hover:text-boost-accent transition-colors">HOME</a>
+            <a href="tools.html" class="mobile-link hover:text-boost-accent transition-colors">TOOLS</a>
+            <a href="aboutus.html" class="mobile-link hover:text-boost-accent transition-colors">ABOUT US</a>
+            <a href="membership.html" class="mobile-link text-boost-accent mt-4">Join Now</a>
+        </div>
+    </div>
+
+    <div
+        class="fixed right-10 top-1/2 transform -translate-y-1/2 z-40 hidden lg:flex flex-col gap-6 items-center mix-blend-screen">
+        <div class="w-[1px] h-32 bg-gradient-to-b from-transparent to-white/30"></div>
+        <a href="#" class="text-gray-500 hover:text-boost-accent hover:scale-110 transition-all duration-300 text-sm"><i
+                class="fa-brands fa-instagram"></i></a>
+        <a href="#" class="text-gray-500 hover:text-boost-accent hover:scale-110 transition-all duration-300 text-sm"><i
+                class="fa-brands fa-twitter"></i></a>
+        <div class="w-[1px] h-32 bg-gradient-to-b from-white/30 to-transparent"></div>
+    </div>
 
     <!-- HERO SECTION -->
     <header class="relative min-h-[100dvh] w-full flex items-center overflow-hidden pt-20">
